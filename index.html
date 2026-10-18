@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- 確保向 YouTube 發送正確的 Referrer 標頭，避免觸發 Error 150 / 153 -->
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>YouTube 音樂靈感與精華記錄器 PRO v5.2</title>
+    <title>YouTube 音樂靈感與精華記錄器 PRO v5.3</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 FontAwesome 圖示 -->
@@ -21,7 +21,7 @@
         }
         .toast-enter { animation: slideIn 0.25s ease-out forwards; }
         @keyframes pulseFlash {
-            0% { background-color: rgba(245, 158, 11, 0.35); }
+            0% { background-color: rgba(16, 185, 129, 0.35); }
             100% { background-color: transparent; }
         }
         .flash-highlight { animation: pulseFlash 0.6s ease-out; }
@@ -48,10 +48,10 @@
         <!-- 標題 -->
         <header class="mb-6 text-center">
             <div class="inline-flex items-center gap-2 bg-pink-500/10 border border-pink-500/30 text-pink-400 text-xs font-semibold px-3 py-1 rounded-full mb-2">
-                <i class="fa-solid fa-bolt"></i> PRO v5.2 防錯升級 ‧ 禁嵌救援版
+                <i class="fa-solid fa-bolt"></i> PRO v5.3 多維度交叉篩選 ‧ 禁嵌救援版
             </div>
             <h1 class="text-3xl font-bold mb-2"><i class="fa-solid fa-music text-pink-500"></i> YouTube 音樂靈感與精華記錄器</h1>
-            <p class="text-gray-400 text-sm">支援邊聽邊點「一鍵抓起點/終點」、A-B 段循環慢速播放、禁嵌影片獨立小視窗救援與 JSON 備份</p>
+            <p class="text-gray-400 text-sm">支援邊聽邊點「一鍵抓起點/終點」、曲風/精華標籤/頻道交叉篩選、A-B 段慢速循環與 JSON 備份</p>
         </header>
 
         <!-- 頂部內嵌迷你播放器 (支援即時打點抓秒數 & 錯誤救援遮罩) -->
@@ -197,8 +197,8 @@
                 </div>
             </div>
 
-            <!-- 基本欄位 + 選填樂手屬性 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <!-- 基本欄位 (歌名 / 頻道 / 整理時間) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div>
                     <label class="block text-sm font-medium mb-1">歌曲名稱 <span class="text-pink-500">*</span></label>
                     <input type="text" id="titleInput" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-pink-500" placeholder="完整曲名">
@@ -207,21 +207,9 @@
                     <label class="block text-sm font-medium mb-1">頻道 / 樂團名稱</label>
                     <input type="text" id="channelInput" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-pink-500" placeholder="樂團或創作者名稱">
                 </div>
-            </div>
-
-            <!-- 進階屬性欄位 (調弦 / BPM / 紀錄時間) -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div>
-                    <label class="block text-xs font-medium text-gray-400 mb-1"><i class="fa-solid fa-guitar text-amber-400"></i> 調弦 / 編制 (選填)</label>
-                    <input type="text" id="tuningInput" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-amber-500" placeholder="例: Drop D / 7弦 / 標準調弦">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-400 mb-1"><i class="fa-solid fa-gauge-high text-amber-400"></i> BPM 速度 / 拍號 (選填)</label>
-                    <input type="text" id="bpmInput" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-amber-500" placeholder="例: 185 BPM / 7/8拍">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-400 mb-1"><i class="fa-solid fa-clock-rotate-left"></i> 整理紀錄時間</label>
-                    <input type="text" id="collectDateInput" disabled class="w-full bg-gray-950 text-gray-500 border border-gray-800 rounded-lg px-3 py-1.5 text-sm cursor-not-allowed">
+                    <label class="block text-sm font-medium text-gray-400 mb-1"><i class="fa-solid fa-clock-rotate-left"></i> 整理紀錄時間</label>
+                    <input type="text" id="collectDateInput" disabled class="w-full bg-gray-950 text-gray-500 border border-gray-800 rounded-lg px-3 py-2 text-sm cursor-not-allowed">
                 </div>
             </div>
 
@@ -233,7 +221,7 @@
 
             <!-- 整體備註 -->
             <div class="mb-5">
-                <label class="block text-sm font-medium mb-1">整體備註（編曲結構、音色配置、練琴筆記）</label>
+                <label class="block text-sm font-medium mb-1">整體備註（編曲結構、音色配置、靈感筆記）</label>
                 <textarea id="noteInput" rows="2" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-pink-500" placeholder="寫下這首歌的背景、Riff 特色或合成器音色..."></textarea>
             </div>
 
@@ -251,42 +239,70 @@
                 <div id="segmentsContainer" class="space-y-3"></div>
             </div>
 
+            <!-- 確認新增 / 儲存修改按鈕 (改為翠綠色系) -->
             <!-- 確認新增 / 儲存修改按鈕 -->
-            <div class="flex justify-end gap-3">
-                <button id="submitSongBtn" onclick="saveSong()" class="bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-400 hover:from-amber-600 hover:to-orange-600 text-gray-950 font-bold px-8 py-3 rounded-xl transition shadow-lg transform hover:scale-[1.01] text-base">
+            <div class="flex justify-end gap-3 mb-6">
+                <button id="submitSongBtn" onclick="saveSong()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2.5 rounded-xl transition shadow-lg">
                     <i class="fa-solid fa-check-circle"></i> 確認新增至清單
                 </button>
             </div>
-        </div>
 
-        <!-- 搜尋、排序與曲風快速篩選列 -->
-        <div class="bg-gray-800 rounded-xl p-4 shadow-lg mb-6 border border-gray-700 space-y-3">
-            <div class="flex flex-col md:flex-row gap-3">
-                <div class="relative flex-1">
+        <!-- 搜尋、排序與多維度交叉篩選列 (曲風 + 精華標籤 + 頻道) -->
+        <div class="bg-gray-800 rounded-xl p-4 shadow-lg mb-6 border border-gray-700 space-y-4">
+            <!-- 第一排：關鍵字搜尋 + 頻道篩選 + 排序方式 -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                <!-- 關鍵字搜尋 -->
+                <div class="relative md:col-span-5">
                     <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-                    <input type="text" id="searchInput" oninput="renderSongs()" placeholder="搜尋歌名、樂團、調弦、備註或片段標籤 (例: 電吉他 Solo)..." class="w-full bg-gray-900 border border-gray-700 rounded-lg pl-9 pr-8 py-2 text-sm focus:outline-none focus:border-pink-500">
+                    <input type="text" id="searchInput" oninput="renderSongs()" placeholder="搜尋歌名、樂團、備註或片段描述..." class="w-full bg-gray-900 border border-gray-700 rounded-lg pl-9 pr-8 py-2 text-sm focus:outline-none focus:border-pink-500">
                     <button onclick="clearSearch()" id="clearSearchBtn" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs">
                         <i class="fa-solid fa-circle-xmark"></i>
                     </button>
                 </div>
-                <select id="sortSelect" onchange="renderSongs()" class="bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-pink-500">
-                    <option value="newest">🕒 最新收藏優先</option>
-                    <option value="oldest">⏳ 最舊收藏優先</option>
-                    <option value="title">🔤 依歌名排序 (A-Z)</option>
-                    <option value="segments">🔥 依精華片段數量排序</option>
-                </select>
+
+                <!-- 依頻道 / 樂團篩選下拉選單 -->
+                <div class="md:col-span-4">
+                    <select id="channelFilterSelect" onchange="setChannelFilter(this.value)" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-sky-500">
+                        <option value="ALL">📺 所有頻道 / 樂團</option>
+                    </select>
+                </div>
+
+                <!-- 排序方式 -->
+                <div class="md:col-span-3">
+                    <select id="sortSelect" onchange="renderSongs()" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-pink-500">
+                        <option value="newest">🕒 最新收藏優先</option>
+                        <option value="oldest">⏳ 最舊收藏優先</option>
+                        <option value="title">🔤 依歌名排序 (A-Z)</option>
+                        <option value="segments">🔥 依精華片段數量</option>
+                    </select>
+                </div>
             </div>
 
-            <div>
-                <div class="text-xs font-semibold text-gray-400 mb-2"><i class="fa-solid fa-filter"></i> 依曲風快速篩選：</div>
-                <div id="filterTagsContainer" class="flex flex-wrap gap-2"></div>
+            <!-- 第二排：依曲風快速篩選 -->
+            <div class="pt-2 border-t border-gray-700/60">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="text-xs font-semibold text-purple-400"><i class="fa-solid fa-tags"></i> 依曲風分類篩選：</div>
+                    <button id="resetAllFiltersBtn" onclick="resetAllFilters()" class="hidden text-xs text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-left"></i> 清除所有篩選條件
+                    </button>
+                </div>
+                <div id="filterTagsContainer" class="flex flex-wrap gap-1.5"></div>
+            </div>
+
+            <!-- 第三排：依精華片段類型 (快速標籤，如吉他Solo、吼腔) 篩選 -->
+            <div class="pt-2 border-t border-gray-700/60">
+                <div class="text-xs font-semibold text-pink-400 mb-2">
+                    <i class="fa-solid fa-bolt"></i> 依精華片段標籤篩選 <span class="text-gray-500 font-normal">(點擊可快速找出含有「電吉他 Solo」、「吼腔」等段落的歌曲)</span>：
+                </div>
+                <div id="filterQuickTagsContainer" class="flex flex-wrap gap-1.5"></div>
             </div>
         </div>
 
         <!-- 動作清單與匯出入備份 -->
         <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
             <h2 class="text-xl font-semibold">
-                <i class="fa-solid fa-list text-pink-500"></i> 已收藏的音樂清單 (<span id="songCount">0</span>)
+                <i class="fa-solid fa-list text-pink-500"></i> 已收藏的音樂清單
+                <span class="text-sm font-normal text-gray-400 ml-1">(顯示 <span id="filteredCount" class="text-emerald-400 font-bold">0</span> / 共 <span id="songCount">0</span> 首)</span>
             </h2>
             <div class="flex flex-wrap gap-2">
                 <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importData(event)">
@@ -314,7 +330,12 @@
         
         let genres = [];
         let quickTags = [];
-        let currentFilter = 'ALL';
+        
+        // 多維度篩選狀態
+        let currentGenreFilter = 'ALL';
+        let currentQuickTagFilter = 'ALL';
+        let currentChannelFilter = 'ALL';
+
         let editingSongId = null;
         let activeSegmentRow = null;
 
@@ -329,7 +350,6 @@
 
         // --- 初始化 ---
         window.onload = function() {
-            // 檢查是否為 file:// 直接雙擊開啟
             if (window.location.protocol === 'file:') {
                 document.getElementById('fileProtocolWarning').classList.remove('hidden');
             }
@@ -338,7 +358,7 @@
             renderGenres();
             renderQuickTags();
             resetSegmentRows();
-            renderFilterTags();
+            renderAllFilterControls();
             renderSongs();
         };
 
@@ -504,7 +524,7 @@
             return match ? match[1] : '';
         }
 
-        // --- YouTube IFrame Player API 控制 (含錯誤 150/153 攔截與救援) ---
+        // --- YouTube IFrame Player API 控制 ---
         function onYouTubeIframeAPIReady() {}
 
         function playSegment(videoId, startStr, endStr, songTitle, segDesc, enableLoop = true) {
@@ -535,7 +555,6 @@
                 playsinline: 1
             };
 
-            // 若在 http/https 環境下，主動傳遞 origin 參數以避免部分音樂影片誤判 Error 150/153
             if (window.location.protocol.startsWith('http')) {
                 playerVarsConfig.origin = window.location.origin;
             }
@@ -566,7 +585,6 @@
             }
         }
 
-        // 當遇到 YouTube Error 101 / 150 / 153 時自動觸發救援介面
         function handlePlayerError(event) {
             const code = event.data;
             const overlay = document.getElementById('playerErrorOverlay');
@@ -588,7 +606,6 @@
             }
         }
 
-        // 彈出無邊框獨立小視窗播放 (突破禁止嵌入限制)
         function openPopupPlayer() {
             const url = document.getElementById('urlInput').value.trim();
             const vid = activeVideoId || extractVideoId(url);
@@ -602,7 +619,6 @@
             showToast('已開啟獨立小視窗並跳轉至指定秒數！', 'info');
         }
 
-        // 載入表單上的網址到播放器自由試聽
         function previewUrlInPlayer() {
             const url = document.getElementById('urlInput').value.trim();
             const videoId = extractVideoId(url);
@@ -864,7 +880,7 @@
                 </div>
             `).join('');
 
-            renderFilterTags();
+            renderAllFilterControls();
         }
 
         function addNewGenre() {
@@ -888,7 +904,7 @@
                 return;
             }
             const removed = genres.splice(index, 1)[0];
-            if (currentFilter === removed) currentFilter = 'ALL';
+            if (currentGenreFilter === removed) currentGenreFilter = 'ALL';
             saveToLocalStorage();
             renderGenres();
             renderSongs();
@@ -910,6 +926,8 @@
                     <button type="button" onclick="toggleQuickTagInRow(this, ${idx})" class="text-xs bg-gray-800 hover:bg-pink-900/60 hover:border-pink-500 text-gray-300 px-2 py-1 rounded border border-gray-700 transition">${escapeHtml(t)}</button>
                 `).join('');
             });
+
+            renderAllFilterControls();
         }
 
         function addNewQuickTag() {
@@ -933,8 +951,10 @@
                 return;
             }
             const removed = quickTags.splice(index, 1)[0];
+            if (currentQuickTagFilter === removed) currentQuickTagFilter = 'ALL';
             saveToLocalStorage();
             renderQuickTags();
+            renderSongs();
             showToast(`已移除標籤：${removed}`, 'info');
         }
 
@@ -1072,8 +1092,6 @@
             const url = document.getElementById('urlInput').value.trim();
             const title = document.getElementById('titleInput').value.trim();
             const channel = document.getElementById('channelInput').value.trim();
-            const tuning = document.getElementById('tuningInput').value.trim();
-            const bpm = document.getElementById('bpmInput').value.trim();
             const collectDate = document.getElementById('collectDateInput').value;
             const note = document.getElementById('noteInput').value.trim();
 
@@ -1116,8 +1134,6 @@
                         videoId,
                         title,
                         channel,
-                        tuning,
-                        bpm,
                         genres: selectedGenres,
                         note,
                         thumbnail,
@@ -1133,8 +1149,6 @@
                     videoId,
                     title,
                     channel,
-                    tuning,
-                    bpm,
                     genres: selectedGenres,
                     collectDate,
                     note,
@@ -1146,7 +1160,7 @@
             }
 
             saveToLocalStorage();
-            renderFilterTags();
+            renderAllFilterControls();
             renderSongs();
         }
 
@@ -1159,8 +1173,6 @@
             document.getElementById('urlInput').value = song.url || '';
             document.getElementById('titleInput').value = song.title || '';
             document.getElementById('channelInput').value = song.channel || '';
-            document.getElementById('tuningInput').value = song.tuning || '';
-            document.getElementById('bpmInput').value = song.bpm || '';
             document.getElementById('collectDateInput').value = song.collectDate || '';
             document.getElementById('noteInput').value = song.note || '';
 
@@ -1181,8 +1193,8 @@
             renderQuickTags();
             refreshSegmentRowBadges();
 
-            document.getElementById('formContainer').classList.replace('border-gray-700', 'border-amber-500');
-            document.getElementById('formTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-amber-400"></i> 正在編輯：${escapeHtml(song.title)}`;
+            document.getElementById('formContainer').classList.replace('border-gray-700', 'border-emerald-500');
+            document.getElementById('formTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-emerald-400"></i> 正在編輯：${escapeHtml(song.title)}`;
             document.getElementById('cancelEditBtn').classList.remove('hidden');
             document.getElementById('submitSongBtn').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> 儲存修改內容`;
 
@@ -1191,7 +1203,7 @@
 
         function cancelEdit() {
             editingSongId = null;
-            document.getElementById('formContainer').classList.replace('border-amber-500', 'border-gray-700');
+            document.getElementById('formContainer').classList.replace('border-emerald-500', 'border-gray-700');
             document.getElementById('formTitle').innerHTML = `<i class="fa-solid fa-plus-circle"></i> 新增一首歌`;
             document.getElementById('cancelEditBtn').classList.add('hidden');
             document.getElementById('submitSongBtn').innerHTML = `<i class="fa-solid fa-check-circle"></i> 確認新增至清單`;
@@ -1202,33 +1214,40 @@
             document.getElementById('urlInput').value = '';
             document.getElementById('titleInput').value = '';
             document.getElementById('channelInput').value = '';
-            document.getElementById('tuningInput').value = '';
-            document.getElementById('bpmInput').value = '';
             document.getElementById('noteInput').value = '';
             document.querySelectorAll('input[name="songGenres"]').forEach(cb => cb.checked = false);
             updateCollectTime();
             resetSegmentRows();
         }
 
-        // --- 篩選與搜尋邏輯 ---
-        function renderFilterTags() {
+        // --- 🔥 多維度篩選控制 (曲風 + 精華標籤 + 頻道) ---
+        function renderAllFilterControls() {
+            renderGenreFilterTags();
+            renderQuickTagFilterButtons();
+            renderChannelFilterDropdown();
+            updateResetFilterButtonVisibility();
+        }
+
+        // 1. 曲風篩選按鈕渲染
+        function renderGenreFilterTags() {
             const container = document.getElementById('filterTagsContainer');
+            if (!container) return;
             const uncheckedCount = songs.filter(s => !s.genres || s.genres.length === 0).length;
 
             let html = `
-                <button onclick="setFilter('ALL')" class="text-xs px-3 py-1.5 rounded-lg border transition ${currentFilter === 'ALL' ? 'bg-pink-600 border-pink-500 text-white font-bold' : 'bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-700'}">
-                    全部顯示 (${songs.length})
+                <button onclick="setGenreFilter('ALL')" class="text-xs px-3 py-1.5 rounded-lg border transition ${currentGenreFilter === 'ALL' ? 'bg-purple-600 border-purple-400 text-white font-bold shadow-sm' : 'bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-700'}">
+                    全部曲風 (${songs.length})
                 </button>
-                <button onclick="setFilter('UNCHECKED')" class="text-xs px-3 py-1.5 rounded-lg border transition ${currentFilter === 'UNCHECKED' ? 'bg-pink-600 border-pink-500 text-white font-bold' : 'bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-700'}">
+                <button onclick="setGenreFilter('UNCHECKED')" class="text-xs px-3 py-1.5 rounded-lg border transition ${currentGenreFilter === 'UNCHECKED' ? 'bg-purple-600 border-purple-400 text-white font-bold shadow-sm' : 'bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-700'}">
                     未分類 (${uncheckedCount})
                 </button>
             `;
 
             html += genres.map((g, idx) => {
                 const count = songs.filter(s => s.genres && s.genres.includes(g)).length;
-                const isActive = currentFilter === g;
+                const isActive = currentGenreFilter === g;
                 return `
-                    <button onclick="setFilterByIndex(${idx})" class="text-xs px-3 py-1.5 rounded-lg border transition ${isActive ? 'bg-purple-600 border-purple-500 text-white font-bold' : 'bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-700'}">
+                    <button onclick="setGenreFilterByIndex(${idx})" class="text-xs px-3 py-1.5 rounded-lg border transition ${isActive ? 'bg-purple-600 border-purple-400 text-white font-bold shadow-sm' : 'bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-700'}">
                         ${escapeHtml(g)} (${count})
                     </button>
                 `;
@@ -1237,21 +1256,137 @@
             container.innerHTML = html;
         }
 
-        function setFilter(filterName) {
-            currentFilter = filterName;
-            renderFilterTags();
+        // 2. 精華片段標籤 (如：電吉他 Solo、吼腔) 篩選按鈕渲染
+        function renderQuickTagFilterButtons() {
+            const container = document.getElementById('filterQuickTagsContainer');
+            if (!container) return;
+
+            let html = `
+                <button onclick="setQuickTagFilter('ALL')" class="text-xs px-3 py-1.5 rounded-lg border transition ${currentQuickTagFilter === 'ALL' ? 'bg-pink-600 border-pink-400 text-white font-bold shadow-sm' : 'bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-700'}">
+                    全部精華類型
+                </button>
+            `;
+
+            html += quickTags.map((tag, idx) => {
+                const count = songs.filter(s => songHasQuickTag(s, tag)).length;
+                const isActive = currentQuickTagFilter === tag;
+                return `
+                    <button onclick="setQuickTagFilterByIndex(${idx})" class="text-xs px-3 py-1.5 rounded-lg border transition ${isActive ? 'bg-pink-600 border-pink-400 text-white font-bold shadow-sm' : 'bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-700'}">
+                        ${escapeHtml(tag)} (${count})
+                    </button>
+                `;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        // 判斷某首歌的任一片段或備註是否包含指定標籤
+        function songHasQuickTag(song, tag) {
+            if (!song || !tag) return false;
+            const target = tag.toLowerCase();
+            return (song.segments || []).some(seg => String(seg.desc || '').toLowerCase().includes(target));
+        }
+
+        // 3. 頻道 / 樂團下拉選單動態生成
+        function renderChannelFilterDropdown() {
+            const select = document.getElementById('channelFilterSelect');
+            if (!select) return;
+
+            const channelCounts = {};
+            let unknownCount = 0;
+
+            songs.forEach(s => {
+                const ch = (s.channel || '').trim();
+                if (ch) {
+                    channelCounts[ch] = (channelCounts[ch] || 0) + 1;
+                } else {
+                    unknownCount++;
+                }
+            });
+
+            const sortedChannels = Object.keys(channelCounts).sort((a, b) => a.localeCompare(b, 'zh-Hant'));
+
+            // 若目前選中的頻道已被刪光，自動切回 ALL
+            if (currentChannelFilter !== 'ALL' && currentChannelFilter !== 'UNKNOWN' && !channelCounts[currentChannelFilter]) {
+                currentChannelFilter = 'ALL';
+            }
+
+            let html = `<option value="ALL">📺 所有頻道 / 樂團 (${songs.length})</option>`;
+            sortedChannels.forEach(ch => {
+                const selected = currentChannelFilter === ch ? 'selected' : '';
+                html += `<option value="${escapeHtml(ch)}" ${selected}>🎤 ${escapeHtml(ch)} (${channelCounts[ch]})</option>`;
+            });
+
+            if (unknownCount > 0) {
+                const selected = currentChannelFilter === 'UNKNOWN' ? 'selected' : '';
+                html += `<option value="UNKNOWN" ${selected}>❓ 未填寫頻道 (${unknownCount})</option>`;
+            }
+
+            select.innerHTML = html;
+        }
+
+        function setGenreFilter(filterName) {
+            currentGenreFilter = filterName;
+            renderAllFilterControls();
             renderSongs();
         }
 
-        function setFilterByIndex(idx) {
-            currentFilter = genres[idx] || 'ALL';
-            renderFilterTags();
+        function setGenreFilterByIndex(idx) {
+            currentGenreFilter = genres[idx] || 'ALL';
+            renderAllFilterControls();
             renderSongs();
+        }
+
+        function setQuickTagFilter(tagName) {
+            currentQuickTagFilter = tagName;
+            renderAllFilterControls();
+            renderSongs();
+        }
+
+        function setQuickTagFilterByIndex(idx) {
+            const selected = quickTags[idx] || 'ALL';
+            // 再點一次相同標籤可取消篩選
+            currentQuickTagFilter = (currentQuickTagFilter === selected) ? 'ALL' : selected;
+            renderAllFilterControls();
+            renderSongs();
+        }
+
+        function setChannelFilter(channelVal) {
+            currentChannelFilter = channelVal || 'ALL';
+            updateResetFilterButtonVisibility();
+            renderSongs();
+        }
+
+        function resetAllFilters() {
+            currentGenreFilter = 'ALL';
+            currentQuickTagFilter = 'ALL';
+            currentChannelFilter = 'ALL';
+            document.getElementById('searchInput').value = '';
+            renderAllFilterControls();
+            renderSongs();
+            showToast('已清除所有篩選條件！', 'info');
+        }
+
+        function updateResetFilterButtonVisibility() {
+            const btn = document.getElementById('resetAllFiltersBtn');
+            if (!btn) return;
+            const hasActiveFilter = currentGenreFilter !== 'ALL' || currentQuickTagFilter !== 'ALL' || currentChannelFilter !== 'ALL' || (document.getElementById('searchInput')?.value.trim() !== '');
+            btn.classList.toggle('hidden', !hasActiveFilter);
         }
 
         function clearSearch() {
             document.getElementById('searchInput').value = '';
+            updateResetFilterButtonVisibility();
             renderSongs();
+        }
+
+        // 點擊卡片上的頻道名稱可直接篩選該頻道
+        function filterByChannelClick(channelName) {
+            if (!channelName) return;
+            currentChannelFilter = channelName;
+            renderAllFilterControls();
+            renderSongs();
+            showToast(`已篩選頻道：${channelName}`, 'info');
         }
 
         // --- 渲染歌曲卡片列表 ---
@@ -1262,17 +1397,33 @@
             const searchKeyword = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
             const clearBtn = document.getElementById('clearSearchBtn');
             if (clearBtn) clearBtn.classList.toggle('hidden', !searchKeyword);
+            updateResetFilterButtonVisibility();
 
             let filteredSongs = [...songs];
-            if (currentFilter === 'UNCHECKED') {
+
+            // 1. 曲風篩選
+            if (currentGenreFilter === 'UNCHECKED') {
                 filteredSongs = filteredSongs.filter(s => !s.genres || s.genres.length === 0);
-            } else if (currentFilter !== 'ALL') {
-                filteredSongs = filteredSongs.filter(s => s.genres && s.genres.includes(currentFilter));
+            } else if (currentGenreFilter !== 'ALL') {
+                filteredSongs = filteredSongs.filter(s => s.genres && s.genres.includes(currentGenreFilter));
             }
 
+            // 2. 精華片段標籤篩選 (如：電吉他 Solo、吼腔)
+            if (currentQuickTagFilter !== 'ALL') {
+                filteredSongs = filteredSongs.filter(s => songHasQuickTag(s, currentQuickTagFilter));
+            }
+
+            // 3. 頻道篩選
+            if (currentChannelFilter === 'UNKNOWN') {
+                filteredSongs = filteredSongs.filter(s => !s.channel || !s.channel.trim());
+            } else if (currentChannelFilter !== 'ALL') {
+                filteredSongs = filteredSongs.filter(s => (s.channel || '').trim() === currentChannelFilter);
+            }
+
+            // 4. 文字搜尋關鍵字
             if (searchKeyword) {
                 filteredSongs = filteredSongs.filter(s => {
-                    const matchBasic = [s.title, s.channel, s.note, s.tuning, s.bpm, ...(s.genres || [])]
+                    const matchBasic = [s.title, s.channel, s.note, ...(s.genres || [])]
                         .filter(Boolean)
                         .some(text => String(text).toLowerCase().includes(searchKeyword));
                     const matchSegs = (s.segments || []).some(seg =>
@@ -1281,6 +1432,8 @@
                     return matchBasic || matchSegs;
                 });
             }
+
+            document.getElementById('filteredCount').innerText = filteredSongs.length;
 
             const sortBy = document.getElementById('sortSelect')?.value || 'newest';
             filteredSongs.sort((a, b) => {
@@ -1293,9 +1446,10 @@
 
             if (filteredSongs.length === 0) {
                 listEl.innerHTML = `
-                    <div class="text-center text-gray-500 py-12 bg-gray-800/50 rounded-xl border border-dashed border-gray-700">
-                        <i class="fa-solid fa-compact-disc text-3xl mb-2 text-gray-600"></i>
-                        <p>找不到符合條件的音樂紀錄！</p>
+                    <div class="text-center text-gray-400 py-12 bg-gray-800/50 rounded-xl border border-dashed border-gray-700 space-y-2">
+                        <i class="fa-solid fa-compact-disc text-3xl text-gray-600"></i>
+                        <p>找不到符合目前篩選條件的音樂紀錄！</p>
+                        ${songs.length > 0 ? `<button onclick="resetAllFilters()" class="text-xs bg-gray-700 hover:bg-gray-600 text-amber-300 px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-rotate-left"></i> 點此重設所有篩選條件</button>` : ''}
                     </div>
                 `;
                 return;
@@ -1309,16 +1463,17 @@
                     ? song.genres.map(g => `<span class="bg-purple-900/80 border border-purple-700/60 text-purple-200 text-xs px-2 py-0.5 rounded-full">${escapeHtml(g)}</span>`).join('')
                     : `<span class="bg-gray-700 text-gray-400 text-xs px-2 py-0.5 rounded-full">未分類</span>`;
 
-                const metaBadges = [
-                    song.tuning ? `<span class="bg-amber-950/80 border border-amber-700/50 text-amber-300 text-xs px-2 py-0.5 rounded"><i class="fa-solid fa-guitar mr-1"></i>${escapeHtml(song.tuning)}</span>` : '',
-                    song.bpm ? `<span class="bg-cyan-950/80 border border-cyan-700/50 text-cyan-300 text-xs px-2 py-0.5 rounded"><i class="fa-solid fa-gauge-high mr-1"></i>${escapeHtml(song.bpm)}</span>` : ''
-                ].filter(Boolean).join('');
-
                 const segmentsHtml = (song.segments || []).map((seg, sIdx) => {
                     const startSec = timeToSeconds(seg.start);
                     const directLink = videoId ? `https://www.youtube.com/watch?v=${videoId}&t=${startSec}s` : song.url;
+                    // 若目前正在篩選特定精華標籤，且該片段符合，給予高亮邊框提示
+                    const isMatchedTag = currentQuickTagFilter !== 'ALL' && String(seg.desc || '').toLowerCase().includes(currentQuickTagFilter.toLowerCase());
+                    const rowBorderClass = isMatchedTag
+                        ? 'border-pink-500 bg-pink-950/30 ring-1 ring-pink-500/40'
+                        : 'border-gray-700/80 bg-gray-900/90 hover:border-pink-500/50';
+
                     return `
-                        <div class="bg-gray-900/90 px-3 py-2 rounded-lg text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 border border-gray-700/80 hover:border-pink-500/50 transition">
+                        <div class="${rowBorderClass} px-3 py-2 rounded-lg text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 border transition">
                             <div class="flex items-center gap-2 flex-wrap">
                                 <button onclick="triggerSegmentPlay(${song.id}, ${sIdx})" class="bg-pink-900/90 hover:bg-pink-700 text-pink-200 px-2.5 py-1 rounded font-mono inline-flex items-center gap-1.5 transition shadow-sm" title="點擊在頂部迷你播放器進行區間循環播放">
                                     <i class="fa-solid fa-play text-[10px]"></i> ${escapeHtml(seg.start)} ~ ${escapeHtml(seg.end)}
@@ -1339,6 +1494,8 @@
                     `;
                 }).join('');
 
+                const safeChannel = escapeHtml(song.channel || '未知頻道');
+
                 const card = document.createElement('div');
                 card.className = 'bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-700 flex flex-col md:flex-row gap-4 items-start hover:border-gray-600 transition';
                 card.innerHTML = `
@@ -1355,7 +1512,6 @@
                             <div class="space-y-1">
                                 <div class="flex flex-wrap gap-1.5 items-center">
                                     ${genresHtml}
-                                    ${metaBadges}
                                 </div>
                                 <h3 class="font-bold text-lg text-white">
                                     ${song.url ? `
@@ -1364,7 +1520,7 @@
                                 </h3>
                             </div>
                             <div class="flex items-center gap-1 shrink-0">
-                                <button onclick="editSong(${song.id})" class="text-gray-400 hover:text-amber-400 px-2 py-1 rounded hover:bg-gray-700/60 text-sm transition" title="編輯這首歌">
+                                <button onclick="editSong(${song.id})" class="text-gray-400 hover:text-emerald-400 px-2 py-1 rounded hover:bg-gray-700/60 text-sm transition" title="編輯這首歌">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
                                 <button onclick="deleteSong(${song.id})" class="text-gray-400 hover:text-red-400 px-2 py-1 rounded hover:bg-gray-700/60 text-sm transition" title="刪除這首歌">
@@ -1372,9 +1528,12 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="text-xs text-gray-400 my-1.5">
-                            <span class="text-pink-400 font-medium">${escapeHtml(song.channel || '未知頻道')}</span> 
-                            · 紀錄時間：<span class="text-gray-500">${escapeHtml(song.collectDate || '')}</span>
+                        <div class="text-xs text-gray-400 my-1.5 flex flex-wrap items-center gap-1">
+                            <button type="button" onclick='filterByChannelClick(${JSON.stringify(song.channel || "")})' class="text-sky-400 hover:text-sky-300 font-medium hover:underline" title="點擊只看此頻道的歌曲">
+                                <i class="fa-solid fa-tv text-[11px] mr-0.5"></i>${safeChannel}
+                            </button>
+                            <span>· 紀錄時間：</span>
+                            <span class="text-gray-500">${escapeHtml(song.collectDate || '')}</span>
                         </div>
                         ${song.note ? `<p class="text-xs text-gray-300 bg-gray-900/60 p-2.5 rounded-lg mb-2.5 border-l-2 border-pink-500 whitespace-pre-line"><strong>整體備註：</strong>${escapeHtml(song.note)}</p>` : ''}
                         <div class="space-y-1.5 mt-2">
@@ -1408,7 +1567,7 @@
             songs = songs.filter(s => s.id !== id);
             if (editingSongId === id) cancelEdit();
             saveToLocalStorage();
-            renderFilterTags();
+            renderAllFilterControls();
             renderSongs();
             showToast(`已刪除「${target.title}」`, 'info');
         }
@@ -1420,7 +1579,7 @@
                 return;
             }
             const backupPayload = {
-                version: '5.2',
+                version: '5.3',
                 exportedAt: new Date().toISOString(),
                 genres,
                 quickTags,
@@ -1474,7 +1633,7 @@
                     saveToLocalStorage();
                     renderGenres();
                     renderQuickTags();
-                    renderFilterTags();
+                    renderAllFilterControls();
                     renderSongs();
                     showToast(`成功匯入 ${addedCount} 首新音樂紀錄！`, 'success');
                 } catch (err) {
