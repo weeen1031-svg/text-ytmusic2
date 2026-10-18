@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- 確保向 YouTube 發送正確的 Referrer 標頭，避免觸發 Error 150 / 153 -->
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>YouTube 音樂靈感與精華記錄器 PRO v5.3</title>
+    <title>YouTube 音樂靈感與精華記錄器 PRO v6.0</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 FontAwesome 圖示 -->
@@ -48,19 +48,18 @@
         <!-- 標題 -->
         <header class="mb-6 text-center">
             <div class="inline-flex items-center gap-2 bg-pink-500/10 border border-pink-500/30 text-pink-400 text-xs font-semibold px-3 py-1 rounded-full mb-2">
-                <i class="fa-solid fa-bolt"></i> PRO v5.3 多維度交叉篩選 ‧ 禁嵌救援版
+                <i class="fa-solid fa-bolt"></i> PRO v6.0 星級評分 ‧ 6大曲風+3大來源重構版
             </div>
             <h1 class="text-3xl font-bold mb-2"><i class="fa-solid fa-music text-pink-500"></i> YouTube 音樂靈感與精華記錄器</h1>
-            <p class="text-gray-400 text-sm">支援邊聽邊點「一鍵抓起點/終點」、曲風/精華標籤/頻道交叉篩選、A-B 段慢速循環與 JSON 備份</p>
+            <p class="text-gray-400 text-sm">支援邊聽邊點「一鍵抓起點/終點」、星級/曲風/精華標籤/頻道交叉篩選、A-B 段慢速循環與 JSON 備份</p>
         </header>
 
-        <!-- 頂部內嵌迷你播放器 (支援即時打點抓秒數 & 錯誤救援遮罩) -->
+        <!-- 頂部內嵌迷你播放器 -->
         <div id="playerSection" class="hidden sticky top-3 z-40 bg-gray-800/95 backdrop-blur-md rounded-xl p-4 shadow-2xl border border-pink-500/50 mb-6 transition-all">
             <div class="flex flex-col md:flex-row gap-4 items-center">
                 <!-- YouTube IFrame 容器 + 錯誤救援遮罩 -->
                 <div class="relative w-full md:w-72 aspect-video bg-black rounded-lg overflow-hidden border border-gray-700 shrink-0">
                     <div id="ytPlayer"></div>
-                    <!-- 當遇到錯誤 150/153 或禁止嵌入時顯示的救援面板 -->
                     <div id="playerErrorOverlay" class="hidden absolute inset-0 bg-gray-950/95 flex flex-col items-center justify-center p-3 text-center z-10">
                         <i class="fa-solid fa-ban text-rose-500 text-2xl mb-1.5"></i>
                         <p id="playerErrorMsg" class="text-xs font-bold text-gray-200 mb-1">此影片禁止網頁嵌入播放 (錯誤 150/153)</p>
@@ -144,12 +143,12 @@
             <!-- 曲風管理 -->
             <div class="bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-700">
                 <div class="flex justify-between items-center cursor-pointer" onclick="togglePanel('genreManagerContent', 'genreIcon')">
-                    <h3 class="text-sm font-semibold text-purple-400"><i class="fa-solid fa-tags"></i> 管理曲風分類 <span class="text-xs text-gray-500 font-normal">(自動儲存)</span></h3>
+                    <h3 class="text-sm font-semibold text-purple-400"><i class="fa-solid fa-tags"></i> 管理曲風與來源分類 <span class="text-xs text-gray-500 font-normal">(自動儲存)</span></h3>
                     <i class="fa-solid fa-chevron-down text-gray-400 transition-transform" id="genreIcon"></i>
                 </div>
                 <div id="genreManagerContent" class="hidden pt-3 mt-2 border-t border-gray-700 space-y-2">
                     <div class="flex gap-2">
-                        <input type="text" id="newGenreInput" onkeydown="if(event.key==='Enter') addNewGenre()" placeholder="新曲風 (例: Post-Hardcore / Math Rock)" class="flex-1 bg-gray-900 border border-gray-700 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-purple-500">
+                        <input type="text" id="newGenreInput" onkeydown="if(event.key==='Enter') addNewGenre()" placeholder="新曲風 (例: Post-Hardcore)" class="flex-1 bg-gray-900 border border-gray-700 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-purple-500">
                         <button onclick="addNewGenre()" class="bg-purple-600 hover:bg-purple-700 px-3 py-1.5 rounded text-xs font-medium transition">新增</button>
                     </div>
                     <div id="genreTagsList" class="flex flex-wrap gap-1.5 pt-1"></div>
@@ -164,7 +163,7 @@
                 </div>
                 <div id="tagManagerContent" class="hidden pt-3 mt-2 border-t border-gray-700 space-y-2">
                     <div class="flex gap-2">
-                        <input type="text" id="newTagInput" onkeydown="if(event.key==='Enter') addNewQuickTag()" placeholder="新標籤 (例: Sweep Picking / 雙踏連踩)" class="flex-1 bg-gray-900 border border-gray-700 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-pink-500">
+                        <input type="text" id="newTagInput" onkeydown="if(event.key==='Enter') addNewQuickTag()" placeholder="新標籤 (例: 🎹 華麗過門)" class="flex-1 bg-gray-900 border border-gray-700 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-pink-500">
                         <button onclick="addNewQuickTag()" class="bg-pink-600 hover:bg-pink-700 px-3 py-1.5 rounded text-xs font-medium transition">新增</button>
                     </div>
                     <div id="quickTagsList" class="flex flex-wrap gap-1.5 pt-1"></div>
@@ -197,25 +196,33 @@
                 </div>
             </div>
 
-            <!-- 基本欄位 (歌名 / 頻道 / 整理時間) -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div>
+            <!-- 基本欄位 (歌名 / 頻道 / 喜愛星級 / 整理時間) -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4">
+                <div class="md:col-span-4">
                     <label class="block text-sm font-medium mb-1">歌曲名稱 <span class="text-pink-500">*</span></label>
                     <input type="text" id="titleInput" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-pink-500" placeholder="完整曲名">
                 </div>
-                <div>
+                <div class="md:col-span-3">
                     <label class="block text-sm font-medium mb-1">頻道 / 樂團名稱</label>
                     <input type="text" id="channelInput" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-pink-500" placeholder="樂團或創作者名稱">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-1"><i class="fa-solid fa-clock-rotate-left"></i> 整理紀錄時間</label>
-                    <input type="text" id="collectDateInput" disabled class="w-full bg-gray-950 text-gray-500 border border-gray-800 rounded-lg px-3 py-2 text-sm cursor-not-allowed">
+                <!-- ✨ 新增：表單星級評分器 -->
+                <div class="md:col-span-3">
+                    <label class="block text-sm font-medium text-amber-400 mb-1"><i class="fa-solid fa-star"></i> 個人喜愛度評分</label>
+                    <div class="bg-gray-900 border border-gray-700 rounded-lg px-3 py-1.5 flex items-center justify-between">
+                        <div id="formStarContainer" class="flex items-center gap-1"></div>
+                        <span id="formRatingLabel" class="text-xs text-amber-300 font-bold">3星 收藏</span>
+                    </div>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-400 mb-1"><i class="fa-solid fa-clock-rotate-left"></i> 紀錄時間</label>
+                    <input type="text" id="collectDateInput" disabled class="w-full bg-gray-950 text-gray-500 border border-gray-800 rounded-lg px-2.5 py-2 text-xs cursor-not-allowed">
                 </div>
             </div>
 
             <!-- 曲風複選區塊 -->
             <div class="mb-4">
-                <label class="block text-sm font-medium mb-1 text-purple-400"><i class="fa-solid fa-tags"></i> 曲風分類（可複選）</label>
+                <label class="block text-sm font-medium mb-1 text-purple-400"><i class="fa-solid fa-tags"></i> 曲風與圈子分類（建議選 1~2 個主曲風 + 來源）</label>
                 <div id="genreCheckboxContainer" class="bg-gray-900 border border-gray-700 rounded-lg p-3 flex flex-wrap gap-2.5"></div>
             </div>
 
@@ -239,15 +246,15 @@
                 <div id="segmentsContainer" class="space-y-3"></div>
             </div>
 
-            <!-- 確認新增 / 儲存修改按鈕 (改為翠綠色系) -->
             <!-- 確認新增 / 儲存修改按鈕 -->
-            <div class="flex justify-end gap-3 mb-6">
+            <div class="flex justify-end gap-3">
                 <button id="submitSongBtn" onclick="saveSong()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2.5 rounded-xl transition shadow-lg">
                     <i class="fa-solid fa-check-circle"></i> 確認新增至清單
                 </button>
             </div>
+        </div>
 
-        <!-- 搜尋、排序與多維度交叉篩選列 (曲風 + 精華標籤 + 頻道) -->
+        <!-- 搜尋、排序與多維度交叉篩選列 (星級 + 曲風 + 精華標籤 + 頻道) -->
         <div class="bg-gray-800 rounded-xl p-4 shadow-lg mb-6 border border-gray-700 space-y-4">
             <!-- 第一排：關鍵字搜尋 + 頻道篩選 + 排序方式 -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
@@ -271,6 +278,7 @@
                 <div class="md:col-span-3">
                     <select id="sortSelect" onchange="renderSongs()" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-pink-500">
                         <option value="newest">🕒 最新收藏優先</option>
+                        <option value="rating_desc">⭐ 喜愛星級最高優先</option>
                         <option value="oldest">⏳ 最舊收藏優先</option>
                         <option value="title">🔤 依歌名排序 (A-Z)</option>
                         <option value="segments">🔥 依精華片段數量</option>
@@ -278,21 +286,27 @@
                 </div>
             </div>
 
-            <!-- 第二排：依曲風快速篩選 -->
+            <!-- ✨ 新增第二排：依喜愛星級快速篩選 -->
             <div class="pt-2 border-t border-gray-700/60">
                 <div class="flex justify-between items-center mb-2">
-                    <div class="text-xs font-semibold text-purple-400"><i class="fa-solid fa-tags"></i> 依曲風分類篩選：</div>
+                    <div class="text-xs font-semibold text-amber-400"><i class="fa-solid fa-star"></i> 依個人喜愛度篩選 <span class="text-gray-500 font-normal">(原本的「最愛=5星」、「超愛=4星」已獨立至此)</span>：</div>
                     <button id="resetAllFiltersBtn" onclick="resetAllFilters()" class="hidden text-xs text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1">
                         <i class="fa-solid fa-rotate-left"></i> 清除所有篩選條件
                     </button>
                 </div>
+                <div id="filterRatingContainer" class="flex flex-wrap gap-1.5"></div>
+            </div>
+
+            <!-- 第三排：依曲風快速篩選 -->
+            <div class="pt-2 border-t border-gray-700/60">
+                <div class="text-xs font-semibold text-purple-400 mb-2"><i class="fa-solid fa-tags"></i> 依曲風與圈子來源篩選：</div>
                 <div id="filterTagsContainer" class="flex flex-wrap gap-1.5"></div>
             </div>
 
-            <!-- 第三排：依精華片段類型 (快速標籤，如吉他Solo、吼腔) 篩選 -->
+            <!-- 第四排：依精華片段類型篩選 -->
             <div class="pt-2 border-t border-gray-700/60">
                 <div class="text-xs font-semibold text-pink-400 mb-2">
-                    <i class="fa-solid fa-bolt"></i> 依精華片段標籤篩選 <span class="text-gray-500 font-normal">(點擊可快速找出含有「電吉他 Solo」、「吼腔」等段落的歌曲)</span>：
+                    <i class="fa-solid fa-bolt"></i> 依精華片段標籤篩選 <span class="text-gray-500 font-normal">(直覺聽感流：快速找出吉他 Solo、超爽節奏、神級高音等段落)</span>：
                 </div>
                 <div id="filterQuickTagsContainer" class="flex flex-wrap gap-1.5"></div>
             </div>
@@ -305,6 +319,9 @@
                 <span class="text-sm font-normal text-gray-400 ml-1">(顯示 <span id="filteredCount" class="text-emerald-400 font-bold">0</span> / 共 <span id="songCount">0</span> 首)</span>
             </h2>
             <div class="flex flex-wrap gap-2">
+                <button onclick="applyBuiltInV6Dataset(true)" class="bg-emerald-700 hover:bg-emerald-600 text-white px-3.5 py-2 rounded-lg text-xs font-bold transition shadow border border-emerald-500/50" title="直接將瀏覽器資料庫重置為整理好的 60 首 v6.0 精準分類歌單">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> 一鍵載入/重置 v6.0 整理版歌單 (60首)
+                </button>
                 <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importData(event)">
                 <button onclick="document.getElementById('importFileInput').click()" class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-3.5 py-2 rounded-lg text-xs font-medium transition border border-gray-600">
                     <i class="fa-solid fa-file-import"></i> 匯入備份 (JSON)
@@ -323,11 +340,105 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        // --- 資料與狀態變數 ---
+        // --- ✨ v6.0 內建重構基準資料 (6大曲風 + 3大來源 & 5大直覺聽感標籤) ---
+        const defaultGenres = [
+            '交響 / 哥德金屬 (Symphonic Metal)',
+            '前衛金屬 / 金屬核 (Prog / Metalcore)',
+            '硬式搖滾 / 重搖滾 (Hard Rock)',
+            '日系搖滾 / 流行搖滾 (J-Rock)',
+            '數學 / 另類搖滾 (Math / Alt Rock)',
+            '合成器 / 電子搖滾 (Synth / Electro Rock)',
+            '東方 / 同人 (Touhou & Doujin)',
+            'V家 / 唱見 (Vocaloid & Utaite)',
+            '動漫 / 遊戲 (ACG OST)'
+        ];
+
+        const defaultQuickTags = [
+            '🎸 電吉他 Solo',
+            '🔥 主歌/副歌超爽 Riff',
+            '🥁 超爽節奏 / 雙踏爆發',
+            '🎤 神級高音 / 吼腔爆發',
+            '🎹 華麗過門 / 樂器對飆'
+        ];
+
+        // 內建幫你整理好的 60 首去重、精準曲風與星級歌單
+        const builtInV6Songs = [
+            {"id":1792245451239,"url":"https://music.youtube.com/watch?v=X0lTX-0w4X0&list=LM","videoId":"X0lTX-0w4X0","title":"Minstrel - today is the day (Official Lyrics Video)","channel":"Minstrel","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)"],"collectDate":"2026-10-17 21:54","note":"","thumbnail":"https://img.youtube.com/vi/X0lTX-0w4X0/hqdefault.jpg","segments":[{"start":"3:02","end":"3:21","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792245470669,"url":"https://music.youtube.com/watch?v=qCqd3yFUQVo&list=RDAMVMtK6aC5gwPqk","videoId":"qCqd3yFUQVo","title":"Hexen Noir","channel":"ELFENSJóN - Topic","tuning":"","bpm":"","rating":5,"genres":["交響 / 哥德金屬 (Symphonic Metal)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-17 21:57","note":"","thumbnail":"https://img.youtube.com/vi/qCqd3yFUQVo/hqdefault.jpg","segments":[{"start":"2:32","end":"3:02","desc":"🎸 電吉他 Solo / 🎹 華麗過門 / 樂器對飆"}]},
+            {"id":1792245513922,"url":"https://music.youtube.com/watch?v=7jxS-l9pc34&list=RDAMPLOLAK5uy_mS0Kt-bdJQgWq72Bl6b7mHff6Oln9b6ho","videoId":"7jxS-l9pc34","title":"Echoes","channel":"Versus Me - Topic","tuning":"","bpm":"","rating":3,"genres":["前衛金屬 / 金屬核 (Prog / Metalcore)"],"collectDate":"2026-10-17 21:57","note":"","thumbnail":"https://img.youtube.com/vi/7jxS-l9pc34/hqdefault.jpg","segments":[{"start":"1:53","end":"2:09","desc":"🎸 電吉他 Solo / 🎤 神級高音 / 吼腔爆發"}]},
+            {"id":1792245715439,"url":"https://music.youtube.com/watch?v=JtoRB2XZpsY","videoId":"JtoRB2XZpsY","title":"Hurricanes","channel":"LEVEL NINE - Topic","tuning":"","bpm":"","rating":4,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)","動漫 / 遊戲 (ACG OST)"],"collectDate":"2026-10-17 21:58","note":"","thumbnail":"https://img.youtube.com/vi/JtoRB2XZpsY/hqdefault.jpg","segments":[{"start":"1:32","end":"1:49","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792245821182,"url":"https://music.youtube.com/watch?v=7lApHsfl4ww&list=RDAMVMJtoRB2XZpsY","videoId":"7lApHsfl4ww","title":"WE RISE","channel":"Cosmograph - Topic","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)","合成器 / 電子搖滾 (Synth / Electro Rock)","動漫 / 遊戲 (ACG OST)"],"collectDate":"2026-10-17 22:02","note":"","thumbnail":"https://img.youtube.com/vi/7lApHsfl4ww/hqdefault.jpg","segments":[{"start":"2:15","end":"2:34","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792245906459,"url":"https://music.youtube.com/watch?v=jHVy3kkYiFY&list=OLAK5uy_muBkW3FyoIzFS-o7-JD0HJixVbSCobSqI","videoId":"jHVy3kkYiFY","title":"Gaia (feat. Nonon & Sithu Aye)","channel":"Cepheid - Topic","tuning":"","bpm":"","rating":4,"genres":["交響 / 哥德金屬 (Symphonic Metal)","前衛金屬 / 金屬核 (Prog / Metalcore)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-17 22:03","note":"","thumbnail":"https://img.youtube.com/vi/jHVy3kkYiFY/hqdefault.jpg","segments":[{"start":"2:17","end":"2:45","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246020325,"url":"https://music.youtube.com/watch?v=ohUn40aAIYQ&list=LM","videoId":"ohUn40aAIYQ","title":"「東方 Vocal」 Rebirth 「GET IN THE RING」 (Subbed)","channel":"Undefined Fantastic Channel","tuning":"","bpm":"","rating":3,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-17 22:05","note":"","thumbnail":"https://img.youtube.com/vi/ohUn40aAIYQ/hqdefault.jpg","segments":[{"start":"2:53","end":"3:16","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246165233,"url":"https://music.youtube.com/watch?v=z_QplJoaxCU&list=LM","videoId":"z_QplJoaxCU","title":"離人","channel":"DIMLIM - Topic","tuning":"","bpm":"","rating":3,"genres":["數學 / 另類搖滾 (Math / Alt Rock)","前衛金屬 / 金屬核 (Prog / Metalcore)"],"collectDate":"2026-10-17 22:07","note":"","thumbnail":"https://img.youtube.com/vi/z_QplJoaxCU/hqdefault.jpg","segments":[{"start":"2:37","end":"3:05","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246194381,"url":"https://music.youtube.com/watch?v=rQZIe54r86k&list=LM","videoId":"rQZIe54r86k","title":"彷徨いの冥〜天〜 (アニメMV使用曲)","channel":"Shoujo Fractal - Topic","tuning":"","bpm":"","rating":3,"genres":["交響 / 哥德金屬 (Symphonic Metal)","日系搖滾 / 流行搖滾 (J-Rock)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-17 22:09","note":"","thumbnail":"https://img.youtube.com/vi/rQZIe54r86k/hqdefault.jpg","segments":[{"start":"2:45","end":"3:09","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246248656,"url":"https://music.youtube.com/watch?v=-TLj9l8g7KQ&list=LM","videoId":"-TLj9l8g7KQ","title":"【艦これボーカルアレンジ】二羽の鶴【鶴墜ちる海】","channel":"you","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)","東方 / 同人 (Touhou & Doujin)","動漫 / 遊戲 (ACG OST)"],"collectDate":"2026-10-17 22:10","note":"","thumbnail":"https://img.youtube.com/vi/-TLj9l8g7KQ/hqdefault.jpg","segments":[{"start":"3:37","end":"3:57","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246290133,"url":"https://music.youtube.com/watch?v=II5aDzlt348&list=LM","videoId":"II5aDzlt348","title":"【東方Vocal／Trance Rock】 空想上のアリア 「Frost Fragment」","channel":"Tenshi Hinanawi","tuning":"","bpm":"","rating":3,"genres":["合成器 / 電子搖滾 (Synth / Electro Rock)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-17 22:10","note":"","thumbnail":"https://img.youtube.com/vi/II5aDzlt348/hqdefault.jpg","segments":[{"start":"3:05","end":"3:18","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246362968,"url":"https://music.youtube.com/watch?v=_LLfHs7EfNs&list=LM","videoId":"_LLfHs7EfNs","title":"零れずの願いゴト","channel":"Yuuhei Satellite - Topic","tuning":"","bpm":"","rating":3,"genres":["合成器 / 電子搖滾 (Synth / Electro Rock)","日系搖滾 / 流行搖滾 (J-Rock)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-17 22:11","note":"","thumbnail":"https://img.youtube.com/vi/_LLfHs7EfNs/hqdefault.jpg","segments":[{"start":"2:54","end":"3:07","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246391487,"url":"https://music.youtube.com/watch?v=J3nHQQvF-U4&list=LM","videoId":"J3nHQQvF-U4","title":"【東方Vocal／Rock】 狭霧の灯火 「GET IN THE RING」 【Subbed】","channel":"Kappashiro","tuning":"","bpm":"","rating":3,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-17 22:12","note":"","thumbnail":"https://img.youtube.com/vi/J3nHQQvF-U4/hqdefault.jpg","segments":[{"start":"3:24","end":"3:38","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246419195,"url":"https://music.youtube.com/watch?v=vrXbOr55-7s&list=LM","videoId":"vrXbOr55-7s","title":"【東方Vocal/Hard Rock】Xi【GET IN THE RING】","channel":"THEOLiCA MUSiC","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-17 22:13","note":"","thumbnail":"https://img.youtube.com/vi/vrXbOr55-7s/hqdefault.jpg","segments":[{"start":"1:58","end":"2:20","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246514220,"url":"https://music.youtube.com/watch?v=mmMKnzb0MJk&list=LM","videoId":"mmMKnzb0MJk","title":"Paralyzed","channel":"ILLUMISHADE - Topic","tuning":"","bpm":"","rating":3,"genres":["前衛金屬 / 金屬核 (Prog / Metalcore)","交響 / 哥德金屬 (Symphonic Metal)"],"collectDate":"2026-10-17 22:13","note":"","thumbnail":"https://img.youtube.com/vi/mmMKnzb0MJk/hqdefault.jpg","segments":[{"start":"2:25","end":"2:44","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246550005,"url":"https://music.youtube.com/watch?v=iqg4cFEkAIQ&list=LM","videoId":"iqg4cFEkAIQ","title":"「東方 Vocal」 min～眠～ 「サリー」 (Subbed)","channel":"Undefined Fantastic Channel","tuning":"","bpm":"","rating":3,"genres":["數學 / 另類搖滾 (Math / Alt Rock)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-17 22:15","note":"","thumbnail":"https://img.youtube.com/vi/iqg4cFEkAIQ/hqdefault.jpg","segments":[{"start":"3:23","end":"3:43","desc":"🎸 電吉他 Solo / 🔥 主歌/副歌超爽 Riff"}]},
+            {"id":1792246605524,"url":"https://music.youtube.com/watch?v=_DEfr2LPHUU&list=LM","videoId":"_DEfr2LPHUU","title":"I am the light","channel":"Cö shu Nie - Topic","tuning":"","bpm":"","rating":3,"genres":["數學 / 另類搖滾 (Math / Alt Rock)","日系搖滾 / 流行搖滾 (J-Rock)"],"collectDate":"2026-10-17 22:15","note":"","thumbnail":"https://img.youtube.com/vi/_DEfr2LPHUU/hqdefault.jpg","segments":[{"start":"2:07","end":"2:30","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246664443,"url":"https://music.youtube.com/watch?v=iqmwMQW0alQ&list=LM","videoId":"iqmwMQW0alQ","title":"BLANCNEIGE","channel":"ELFENSJóN - Topic","tuning":"","bpm":"","rating":3,"genres":["交響 / 哥德金屬 (Symphonic Metal)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-17 22:16","note":"","thumbnail":"https://img.youtube.com/vi/iqmwMQW0alQ/hqdefault.jpg","segments":[{"start":"2:35","end":"2:49","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246706669,"url":"https://music.youtube.com/watch?v=eMRG4y9_2Qs&list=LM","videoId":"eMRG4y9_2Qs","title":"Blooming","channel":"Pia Meraleo - Topic","tuning":"","bpm":"","rating":3,"genres":["交響 / 哥德金屬 (Symphonic Metal)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-17 22:17","note":"","thumbnail":"https://img.youtube.com/vi/eMRG4y9_2Qs/hqdefault.jpg","segments":[{"start":"2:48","end":"3:01","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246759784,"url":"https://music.youtube.com/watch?v=vGuVCdI97Dc&list=LM","videoId":"vGuVCdI97Dc","title":"Silent Repose","channel":"二口魔菜 Futakuchi Mana - Topic","tuning":"","bpm":"","rating":3,"genres":["前衛金屬 / 金屬核 (Prog / Metalcore)","V家 / 唱見 (Vocaloid & Utaite)"],"collectDate":"2026-10-17 22:18","note":"","thumbnail":"https://img.youtube.com/vi/vGuVCdI97Dc/hqdefault.jpg","segments":[{"start":"2:21","end":"2:42","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246806582,"url":"https://music.youtube.com/watch?v=zX766xs4ywQ&list=LM","videoId":"zX766xs4ywQ","title":"Destroy for Dasein","channel":"Release - Topic","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-17 22:19","note":"","thumbnail":"https://img.youtube.com/vi/zX766xs4ywQ/hqdefault.jpg","segments":[{"start":"2:33","end":"2:52","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246897893,"url":"https://music.youtube.com/watch?v=Ykp-uUhAqEM&list=RDAMVMn21OJYNKJNQ","videoId":"Ykp-uUhAqEM","title":"pale","channel":"YURiCa/Hanatan - Topic","tuning":"","bpm":"","rating":4,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","V家 / 唱見 (Vocaloid & Utaite)"],"collectDate":"2026-10-17 22:20","note":"","thumbnail":"https://img.youtube.com/vi/Ykp-uUhAqEM/hqdefault.jpg","segments":[{"start":"2:30","end":"2:49","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246944223,"url":"https://music.youtube.com/watch?v=_VkcZ3tmBMo","videoId":"_VkcZ3tmBMo","title":"Hanatan - Niwaka Ame","channel":"「永遠」EIENMUSIC","tuning":"","bpm":"","rating":5,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","V家 / 唱見 (Vocaloid & Utaite)"],"collectDate":"2026-10-17 22:21","note":"整首都好聽","thumbnail":"https://img.youtube.com/vi/_VkcZ3tmBMo/hqdefault.jpg","segments":[{"start":"3:50","end":"4:13","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792246987085,"url":"https://music.youtube.com/watch?v=zyau_YFlkuo","videoId":"zyau_YFlkuo","title":"Into the Fire","channel":"LEVEL NINE - Topic","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)","合成器 / 電子搖滾 (Synth / Electro Rock)","動漫 / 遊戲 (ACG OST)"],"collectDate":"2026-10-17 22:22","note":"","thumbnail":"https://img.youtube.com/vi/zyau_YFlkuo/hqdefault.jpg","segments":[{"start":"1:12","end":"1:26","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792247014268,"url":"https://music.youtube.com/watch?v=DPjK6UUwcPc&list=RDAMVMc5s1L5G2RKc","videoId":"DPjK6UUwcPc","title":"Hanatan┃すきま桜とうその都会 ED 「Brand New Voice」 【Lyrics】","channel":"Xestiny","tuning":"","bpm":"","rating":3,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","V家 / 唱見 (Vocaloid & Utaite)","動漫 / 遊戲 (ACG OST)"],"collectDate":"2026-10-17 22:23","note":"","thumbnail":"https://img.youtube.com/vi/DPjK6UUwcPc/hqdefault.jpg","segments":[{"start":"3:32","end":"3:50","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792247034756,"url":"https://music.youtube.com/watch?v=C9qy5pfPb7k&list=RDAMPLOLAK5uy_k5bC6BokFwvdvD04KSw58lL5zON_LNdbk","videoId":"C9qy5pfPb7k","title":"Moment of Bloom","channel":"Sennzai - Topic","tuning":"","bpm":"","rating":3,"genres":["交響 / 哥德金屬 (Symphonic Metal)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-17 22:23","note":"","thumbnail":"https://img.youtube.com/vi/C9qy5pfPb7k/hqdefault.jpg","segments":[{"start":"3:25","end":"3:40","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792247068542,"url":"https://music.youtube.com/watch?v=xNawqkBXXI8&list=RDAMVMy8wwwMcnHUw","videoId":"xNawqkBXXI8","title":"白き夢は斑に","channel":"ELFENSJóN - Topic","tuning":"","bpm":"","rating":3,"genres":["交響 / 哥德金屬 (Symphonic Metal)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-17 22:23","note":"","thumbnail":"https://img.youtube.com/vi/xNawqkBXXI8/hqdefault.jpg","segments":[{"start":"2:43","end":"3:00","desc":"🎸 電吉他 Solo / 🥁 超爽節奏 / 雙踏爆發"}]},
+            {"id":1792247089256,"url":"https://music.youtube.com/watch?v=t50Icn7n-z0&list=RDAMPLOLAK5uy_mJbHSWriyItQKEjYdfr1t8iQxiIwRDPrk","videoId":"t50Icn7n-z0","title":"Burn My Rage (feat. 重音テト)","channel":"KIRATORA - Topic","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)","V家 / 唱見 (Vocaloid & Utaite)"],"collectDate":"2026-10-17 22:24","note":"","thumbnail":"https://img.youtube.com/vi/t50Icn7n-z0/hqdefault.jpg","segments":[{"start":"2:09","end":"2:24","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792262268962,"url":"https://music.youtube.com/watch?v=YAgdOXlWw4A","videoId":"YAgdOXlWw4A","title":"マインドブランド","channel":"MARETU - Topic","tuning":"","bpm":"","rating":3,"genres":["合成器 / 電子搖滾 (Synth / Electro Rock)","V家 / 唱見 (Vocaloid & Utaite)"],"collectDate":"2026-10-18 02:37","note":"","thumbnail":"https://img.youtube.com/vi/YAgdOXlWw4A/hqdefault.jpg","segments":[{"start":"2:45","end":"2:59","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792262299437,"url":"https://music.youtube.com/watch?v=Zx0PCj7tcHU&list=OLAK5uy_nXbgxu51sJwZQz69UwVWVvu-j22_IYvA8","videoId":"Zx0PCj7tcHU","title":"Nijyuusannji gojyuukyuuhfunn gojyuukyuubyou","channel":"KISIDA KYODAN & THE AKEBOSI ROCKETS - Topic","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)","日系搖滾 / 流行搖滾 (J-Rock)"],"collectDate":"2026-10-18 02:37","note":"","thumbnail":"https://img.youtube.com/vi/Zx0PCj7tcHU/hqdefault.jpg","segments":[{"start":"2:07","end":"2:25","desc":"🎸 電吉他 Solo / 🥁 超爽節奏 / 雙踏爆發"}]},
+            {"id":1792263347676,"url":"https://music.youtube.com/watch?v=zNA0NGty96Y&list=RDAMVMZKvx-sPXxtc","videoId":"zNA0NGty96Y","title":"幻奏は蒼き月となりて","channel":"ELFENSJóN - Topic","tuning":"","bpm":"","rating":3,"genres":["交響 / 哥德金屬 (Symphonic Metal)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-18 02:39","note":"","thumbnail":"https://img.youtube.com/vi/zNA0NGty96Y/hqdefault.jpg","segments":[{"start":"2:08","end":"2:19","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792263404922,"url":"https://music.youtube.com/watch?v=KDM3kzZK7Ys&list=PL7I4U_PgnAmUOSwDNg_UxO-kynoqbT4Ez","videoId":"KDM3kzZK7Ys","title":"ALIVE","channel":"Monster Siren Records - Topic","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)","動漫 / 遊戲 (ACG OST)"],"collectDate":"2026-10-18 02:55","note":"","thumbnail":"https://img.youtube.com/vi/KDM3kzZK7Ys/hqdefault.jpg","segments":[{"start":"3:12","end":"3:28","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792303839071,"url":"https://music.youtube.com/watch?v=iyGkw-XmiKQ&list=OLAK5uy_kXhPWkxJrwsOyctlnfoJ4pFtV0ehE06-s","videoId":"iyGkw-XmiKQ","title":"Give Me Life","channel":"TOGENASHI TOGEARI - Topic","tuning":"","bpm":"","rating":3,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","動漫 / 遊戲 (ACG OST)"],"collectDate":"2026-10-18 14:09","note":"就好聽","thumbnail":"https://img.youtube.com/vi/iyGkw-XmiKQ/hqdefault.jpg","segments":[{"start":"2:50","end":"3:14","desc":"🥁 超爽節奏 / 雙踏爆發 / 🎹 華麗過門 / 樂器對飆"}]},
+            {"id":1792330381700,"url":"https://music.youtube.com/watch?v=SvK3cTWDeRE&list=RDAMVMSvK3cTWDeRE","videoId":"SvK3cTWDeRE","title":"『転生林檎』Covered by Roselia×＋α／あるふぁきゅん。PV（フルサイズver.）【エクストラ楽曲】","channel":"バンドリちゃんねる☆","tuning":"","bpm":"","rating":5,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","V家 / 唱見 (Vocaloid & Utaite)","動漫 / 遊戲 (ACG OST)"],"collectDate":"2026-10-18 21:27","note":"","thumbnail":"https://img.youtube.com/vi/SvK3cTWDeRE/hqdefault.jpg","segments":[{"start":"2:30","end":"2:44","desc":"🥁 超爽節奏 / 雙踏爆發"},{"start":"3:00","end":"3:23","desc":"🎤 神級高音 / 吼腔爆發 / 🥁 超爽節奏 / 雙踏爆發"}]},
+            {"id":1792330447680,"url":"https://music.youtube.com/watch?v=6mbenS47XAk&list=RDAMVMJtoRB2XZpsY","videoId":"6mbenS47XAk","title":"The World Is Waking (Instrumental Version)","channel":"Metal Scar Radio - Topic","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)"],"collectDate":"2026-10-18 21:33","note":"","thumbnail":"https://img.youtube.com/vi/6mbenS47XAk/hqdefault.jpg","segments":[{"start":"3:33","end":"3:47","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792330522990,"url":"https://music.youtube.com/watch?v=qV2Nf6mHWBI","videoId":"qV2Nf6mHWBI","title":"Fate/Grand Order 清廉なるHeretics 【中日字幕】","channel":"黃玄","tuning":"","bpm":"","rating":3,"genres":["交響 / 哥德金屬 (Symphonic Metal)","日系搖滾 / 流行搖滾 (J-Rock)","動漫 / 遊戲 (ACG OST)"],"collectDate":"2026-10-18 21:34","note":"","thumbnail":"https://img.youtube.com/vi/qV2Nf6mHWBI/hqdefault.jpg","segments":[{"start":"2:45","end":"3:05","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792330550096,"url":"https://music.youtube.com/watch?v=zCWJPmtX6PU&list=OLAK5uy_muBkW3FyoIzFS-o7-JD0HJixVbSCobSqI","videoId":"zCWJPmtX6PU","title":"Jack the Ripper","channel":"Cepheid - Topic","tuning":"","bpm":"","rating":3,"genres":["交響 / 哥德金屬 (Symphonic Metal)","前衛金屬 / 金屬核 (Prog / Metalcore)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-18 21:35","note":"","thumbnail":"https://img.youtube.com/vi/zCWJPmtX6PU/hqdefault.jpg","segments":[{"start":"2:09","end":"2:37","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792330626185,"url":"https://music.youtube.com/watch?v=7gE2cJFw_xg&list=LM","videoId":"7gE2cJFw_xg","title":"Dilly-Dally","channel":"BAND-MAID - Topic","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)","日系搖滾 / 流行搖滾 (J-Rock)"],"collectDate":"2026-10-18 21:36","note":"","thumbnail":"https://img.youtube.com/vi/7gE2cJFw_xg/hqdefault.jpg","segments":[{"start":"1:33","end":"1:45","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792330645901,"url":"https://music.youtube.com/watch?v=-vQAJ3CiLaY&list=LM","videoId":"-vQAJ3CiLaY","title":"last cross","channel":"Masami Mitsuoka - Topic","tuning":"","bpm":"","rating":3,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","動漫 / 遊戲 (ACG OST)"],"collectDate":"2026-10-18 21:37","note":"","thumbnail":"https://img.youtube.com/vi/-vQAJ3CiLaY/hqdefault.jpg","segments":[{"start":"3:05","end":"3:22","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792330663590,"url":"https://music.youtube.com/watch?v=376cQuV51Y4&list=LM","videoId":"376cQuV51Y4","title":"is this LOVE?","channel":"ayumi hamasaki - Topic","tuning":"","bpm":"","rating":3,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","硬式搖滾 / 重搖滾 (Hard Rock)"],"collectDate":"2026-10-18 21:37","note":"","thumbnail":"https://img.youtube.com/vi/376cQuV51Y4/hqdefault.jpg","segments":[{"start":"2:53","end":"3:15","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792330683686,"url":"https://music.youtube.com/watch?v=ei_3TU6OGxQ&list=LM","videoId":"ei_3TU6OGxQ","title":"Moments","channel":"ayumi hamasaki - Topic","tuning":"","bpm":"","rating":3,"genres":["日系搖滾 / 流行搖滾 (J-Rock)"],"collectDate":"2026-10-18 21:37","note":"","thumbnail":"https://img.youtube.com/vi/ei_3TU6OGxQ/hqdefault.jpg","segments":[{"start":"3:16","end":"3:39","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792330726342,"url":"https://music.youtube.com/watch?v=ZVC7zsvXhI0&list=LM","videoId":"ZVC7zsvXhI0","title":"Countdown","channel":"Imy - Topic","tuning":"","bpm":"","rating":3,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-18 21:38","note":"","thumbnail":"https://img.youtube.com/vi/ZVC7zsvXhI0/hqdefault.jpg","segments":[{"start":"2:43","end":"2:59","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792330755464,"url":"https://music.youtube.com/watch?v=1QXgnrfDKj0&list=LM","videoId":"1QXgnrfDKj0","title":"一服","channel":"KAF - Topic","tuning":"","bpm":"","rating":3,"genres":["數學 / 另類搖滾 (Math / Alt Rock)","V家 / 唱見 (Vocaloid & Utaite)"],"collectDate":"2026-10-18 21:38","note":"","thumbnail":"https://img.youtube.com/vi/1QXgnrfDKj0/hqdefault.jpg","segments":[{"start":"2:39","end":"2:50","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792330772843,"url":"https://music.youtube.com/watch?v=2Ma9Y32H9D8&list=LM","videoId":"2Ma9Y32H9D8","title":"The End Will Show Us How","channel":"Tremonti - Topic","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)","前衛金屬 / 金屬核 (Prog / Metalcore)"],"collectDate":"2026-10-18 21:39","note":"","thumbnail":"https://img.youtube.com/vi/2Ma9Y32H9D8/hqdefault.jpg","segments":[{"start":"3:22","end":"3:46","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792330828020,"url":"https://music.youtube.com/watch?v=AOTC-nAI5Uw&list=LM","videoId":"AOTC-nAI5Uw","title":"#5","channel":"Ling tosite sigure - Topic","tuning":"","bpm":"","rating":3,"genres":["數學 / 另類搖滾 (Math / Alt Rock)","日系搖滾 / 流行搖滾 (J-Rock)"],"collectDate":"2026-10-18 21:40","note":"","thumbnail":"https://img.youtube.com/vi/AOTC-nAI5Uw/hqdefault.jpg","segments":[{"start":"3:42","end":"4:07","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792330852903,"url":"https://music.youtube.com/watch?v=Cc-Ecr6Yh2Y&list=RDAMVMl6vakC-Tq7I","videoId":"Cc-Ecr6Yh2Y","title":"MYTH & ROID 『HYDRA』 Music Clip フル ver.","channel":"KADOKAWAanime","tuning":"","bpm":"","rating":4,"genres":["合成器 / 電子搖滾 (Synth / Electro Rock)","動漫 / 遊戲 (ACG OST)"],"collectDate":"2026-10-18 21:40","note":"","thumbnail":"https://img.youtube.com/vi/Cc-Ecr6Yh2Y/hqdefault.jpg","segments":[{"start":"2:35","end":"2:59","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792330916772,"url":"https://music.youtube.com/watch?v=CzBHs193rng&list=LM","videoId":"CzBHs193rng","title":"Belle papillon","channel":"TOGENASHI TOGEARI - Topic","tuning":"","bpm":"","rating":3,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","動漫 / 遊戲 (ACG OST)"],"collectDate":"2026-10-18 21:40","note":"","thumbnail":"https://img.youtube.com/vi/CzBHs193rng/hqdefault.jpg","segments":[{"start":"1:43","end":"1:50","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792330929929,"url":"https://music.youtube.com/watch?v=pQtRk9o0wv4&list=LM","videoId":"pQtRk9o0wv4","title":"Et cetera","channel":"ONE OK ROCK - Topic","tuning":"","bpm":"","rating":3,"genres":["日系搖滾 / 流行搖滾 (J-Rock)"],"collectDate":"2026-10-18 21:41","note":"","thumbnail":"https://img.youtube.com/vi/pQtRk9o0wv4/hqdefault.jpg","segments":[{"start":"2:45","end":"3:08","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792330953738,"url":"https://music.youtube.com/watch?v=-Z2xdeGrsEk&list=LM","videoId":"-Z2xdeGrsEk","title":"A Bee and Circus","channel":"sayuri - Topic","tuning":"","bpm":"","rating":3,"genres":["數學 / 另類搖滾 (Math / Alt Rock)","日系搖滾 / 流行搖滾 (J-Rock)"],"collectDate":"2026-10-18 21:42","note":"","thumbnail":"https://img.youtube.com/vi/-Z2xdeGrsEk/hqdefault.jpg","segments":[{"start":"2:42","end":"2:57","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331019517,"url":"https://music.youtube.com/watch?v=-97pgrO23d0&list=LM","videoId":"-97pgrO23d0","title":"赤紙","channel":"Kuroki Nagisa - Topic","tuning":"","bpm":"","rating":4,"genres":["數學 / 另類搖滾 (Math / Alt Rock)","日系搖滾 / 流行搖滾 (J-Rock)"],"collectDate":"2026-10-18 21:42","note":"","thumbnail":"https://img.youtube.com/vi/-97pgrO23d0/hqdefault.jpg","segments":[{"start":"3:33","end":"4:03","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331043166,"url":"https://music.youtube.com/watch?v=yhrNwLvNrQE&list=LM","videoId":"yhrNwLvNrQE","title":"ARTIFICIAL","channel":"Daughtry - Topic","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)"],"collectDate":"2026-10-18 21:43","note":"","thumbnail":"https://img.youtube.com/vi/yhrNwLvNrQE/hqdefault.jpg","segments":[{"start":"2:21","end":"2:34","desc":"🔥 主歌/副歌超爽 Riff / 🥁 超爽節奏 / 雙踏爆發"}]},
+            {"id":1792331070104,"url":"https://music.youtube.com/watch?v=JqDrc6cld6U&list=LM","videoId":"JqDrc6cld6U","title":"NASTY","channel":"ONE OK ROCK - Topic","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)","日系搖滾 / 流行搖滾 (J-Rock)"],"collectDate":"2026-10-18 21:44","note":"","thumbnail":"https://img.youtube.com/vi/JqDrc6cld6U/hqdefault.jpg","segments":[{"start":"2:31","end":"2:43","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331105345,"url":"https://music.youtube.com/watch?v=0InYce2mqeY&list=LM","videoId":"0InYce2mqeY","title":"It's Not Over","channel":"Daughtry - Topic","tuning":"","bpm":"","rating":4,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)"],"collectDate":"2026-10-18 21:44","note":"","thumbnail":"https://img.youtube.com/vi/0InYce2mqeY/hqdefault.jpg","segments":[{"start":"2:07","end":"2:19","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331163414,"url":"https://music.youtube.com/watch?v=_JPA9a1pp1Y&list=LM","videoId":"_JPA9a1pp1Y","title":"ROZEN HORIZON","channel":"Roselia - Topic","tuning":"","bpm":"","rating":3,"genres":["交響 / 哥德金屬 (Symphonic Metal)","動漫 / 遊戲 (ACG OST)"],"collectDate":"2026-10-18 21:45","note":"","thumbnail":"https://img.youtube.com/vi/_JPA9a1pp1Y/hqdefault.jpg","segments":[{"start":"3:55","end":"4:06","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331215835,"url":"https://music.youtube.com/watch?v=R_B4tmy2DVA&list=LM","videoId":"R_B4tmy2DVA","title":"출항 [抜錨(발묘) / 나나호시 관현악단 ナナホシ管弦楽団] ㅣ아카네 리제(Akane Lize) 【COVER】","channel":"아카네 리제 AKANE LIZE","tuning":"","bpm":"","rating":3,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","V家 / 唱見 (Vocaloid & Utaite)"],"collectDate":"2026-10-18 21:46","note":"","thumbnail":"https://img.youtube.com/vi/R_B4tmy2DVA/hqdefault.jpg","segments":[{"start":"2:05","end":"2:32","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331240921,"url":"https://music.youtube.com/watch?v=FwbiSAKRUQc&list=LM","videoId":"FwbiSAKRUQc","title":"Ryuusei","channel":"KISIDA KYODAN & THE AKEBOSI ROCKETS - Topic","tuning":"","bpm":"","rating":4,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","硬式搖滾 / 重搖滾 (Hard Rock)"],"collectDate":"2026-10-18 21:46","note":"","thumbnail":"https://img.youtube.com/vi/FwbiSAKRUQc/hqdefault.jpg","segments":[{"start":"2:36","end":"2:56","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331297631,"url":"https://music.youtube.com/watch?v=sOUkq_CtbD4&list=LM","videoId":"sOUkq_CtbD4","title":"UNINVITED","channel":"coldrain - Topic","tuning":"","bpm":"","rating":4,"genres":["前衛金屬 / 金屬核 (Prog / Metalcore)","硬式搖滾 / 重搖滾 (Hard Rock)"],"collectDate":"2026-10-18 21:47","note":"","thumbnail":"https://img.youtube.com/vi/sOUkq_CtbD4/hqdefault.jpg","segments":[{"start":"3:40","end":"4:15","desc":"🎸 電吉他 Solo / 🥁 超爽節奏 / 雙踏爆發"}]},
+            {"id":1792331330551,"url":"https://music.youtube.com/watch?v=pbxHh6nibiI&list=LM","videoId":"pbxHh6nibiI","title":"mermaid","channel":"Aooo - Topic","tuning":"","bpm":"","rating":4,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","數學 / 另類搖滾 (Math / Alt Rock)"],"collectDate":"2026-10-18 21:48","note":"","thumbnail":"https://img.youtube.com/vi/pbxHh6nibiI/hqdefault.jpg","segments":[{"start":"1:54","end":"2:16","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331362783,"url":"https://music.youtube.com/watch?v=uBA6voYhTg0&list=LM","videoId":"uBA6voYhTg0","title":"CRAZZZY","channel":"Aooo - Topic","tuning":"","bpm":"","rating":4,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","數學 / 另類搖滾 (Math / Alt Rock)"],"collectDate":"2026-10-18 21:48","note":"","thumbnail":"https://img.youtube.com/vi/uBA6voYhTg0/hqdefault.jpg","segments":[{"start":"2:09","end":"2:27","desc":"🥁 超爽節奏 / 雙踏爆發 / 🎸 電吉他 Solo"}]},
+            {"id":1792331389807,"url":"https://music.youtube.com/watch?v=n9KoYaCprj4&list=LM","videoId":"n9KoYaCprj4","title":"Dirty Diana","channel":"Red Handed Denial - Topic","tuning":"","bpm":"","rating":3,"genres":["前衛金屬 / 金屬核 (Prog / Metalcore)"],"collectDate":"2026-10-18 21:49","note":"","thumbnail":"https://img.youtube.com/vi/n9KoYaCprj4/hqdefault.jpg","segments":[{"start":"2:25","end":"2:42","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331428490,"url":"https://music.youtube.com/watch?v=UBeunkhjIGI&list=LM","videoId":"UBeunkhjIGI","title":"Leviathan","channel":"Esprit D'Air - Topic","tuning":"","bpm":"","rating":3,"genres":["前衛金屬 / 金屬核 (Prog / Metalcore)","合成器 / 電子搖滾 (Synth / Electro Rock)"],"collectDate":"2026-10-18 21:49","note":"","thumbnail":"https://img.youtube.com/vi/UBeunkhjIGI/hqdefault.jpg","segments":[{"start":"3:28","end":"3:49","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331446655,"url":"https://music.youtube.com/watch?v=5_wKxyVQ-lc&list=LM","videoId":"5_wKxyVQ-lc","title":"All For Nothing","channel":"NOVELISTS - Topic","tuning":"","bpm":"","rating":4,"genres":["前衛金屬 / 金屬核 (Prog / Metalcore)"],"collectDate":"2026-10-18 21:50","note":"","thumbnail":"https://img.youtube.com/vi/5_wKxyVQ-lc/hqdefault.jpg","segments":[{"start":"2:50","end":"3:11","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331466745,"url":"https://music.youtube.com/watch?v=_xhoZQnoj3s&list=LM","videoId":"_xhoZQnoj3s","title":"Adam and Eve","channel":"NOVELISTS - Topic","tuning":"","bpm":"","rating":3,"genres":["前衛金屬 / 金屬核 (Prog / Metalcore)"],"collectDate":"2026-10-18 21:50","note":"","thumbnail":"https://img.youtube.com/vi/_xhoZQnoj3s/hqdefault.jpg","segments":[{"start":"3:12","end":"3:31","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331487579,"url":"https://music.youtube.com/watch?v=J5OocMcIo0g&list=LM","videoId":"J5OocMcIo0g","title":"Coda","channel":"NOVELISTS - Topic","tuning":"","bpm":"","rating":3,"genres":["前衛金屬 / 金屬核 (Prog / Metalcore)"],"collectDate":"2026-10-18 21:51","note":"","thumbnail":"https://img.youtube.com/vi/J5OocMcIo0g/hqdefault.jpg","segments":[{"start":"3:54","end":"4:03","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331502823,"url":"https://music.youtube.com/watch?v=UUGJvzyWSMI&list=LM","videoId":"UUGJvzyWSMI","title":"Say My Name","channel":"NOVELISTS - Topic","tuning":"","bpm":"","rating":3,"genres":["前衛金屬 / 金屬核 (Prog / Metalcore)"],"collectDate":"2026-10-18 21:51","note":"","thumbnail":"https://img.youtube.com/vi/UUGJvzyWSMI/hqdefault.jpg","segments":[{"start":"3:18","end":"3:49","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331545557,"url":"https://music.youtube.com/watch?v=SXjTtq075eo&list=LM","videoId":"SXjTtq075eo","title":"NEW ERA","channel":"TRiDENT - Topic","tuning":"","bpm":"","rating":3,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)","日系搖滾 / 流行搖滾 (J-Rock)"],"collectDate":"2026-10-18 21:51","note":"","thumbnail":"https://img.youtube.com/vi/SXjTtq075eo/hqdefault.jpg","segments":[{"start":"1:59","end":"2:13","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331573203,"url":"https://music.youtube.com/watch?v=0NJCpJZ19n8&list=LM","videoId":"0NJCpJZ19n8","title":"Again","channel":"YUI - Topic","tuning":"","bpm":"","rating":4,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","動漫 / 遊戲 (ACG OST)"],"collectDate":"2026-10-18 21:52","note":"","thumbnail":"https://img.youtube.com/vi/0NJCpJZ19n8/hqdefault.jpg","segments":[{"start":"2:57","end":"3:09","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331607427,"url":"https://music.youtube.com/watch?v=oGVQJIU9k5Q&list=RDAMVMeXfKULfW8ew","videoId":"oGVQJIU9k5Q","title":"Scarlet Pulsation | アルバ・セラ【OFFICIAL VIDEO】","channel":"【活動終了】アルバ・セラ / Alba Sera","tuning":"","bpm":"","rating":4,"genres":["交響 / 哥德金屬 (Symphonic Metal)","東方 / 同人 (Touhou & Doujin)"],"collectDate":"2026-10-18 21:53","note":"","thumbnail":"https://img.youtube.com/vi/oGVQJIU9k5Q/hqdefault.jpg","segments":[{"start":"1:55","end":"2:23","desc":"🎸 電吉他 Solo / 🥁 超爽節奏 / 雙踏爆發"}]},
+            {"id":1792331654515,"url":"https://music.youtube.com/watch?v=ZMwOBe-hUls&list=RDAMVMn21OJYNKJNQ","videoId":"ZMwOBe-hUls","title":"Color","channel":"YURiCa/Hanatan - Topic","tuning":"","bpm":"","rating":4,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","V家 / 唱見 (Vocaloid & Utaite)"],"collectDate":"2026-10-18 21:53","note":"","thumbnail":"https://img.youtube.com/vi/ZMwOBe-hUls/hqdefault.jpg","segments":[{"start":"1:50","end":"2:14","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331687361,"url":"https://music.youtube.com/watch?v=DvF3T0wPvRI&list=RDAMVMn21OJYNKJNQ","videoId":"DvF3T0wPvRI","title":"Artifact (feat. 初音ミク)","channel":"buzzG - Topic","tuning":"","bpm":"","rating":3,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","V家 / 唱見 (Vocaloid & Utaite)"],"collectDate":"2026-10-18 21:54","note":"","thumbnail":"https://img.youtube.com/vi/DvF3T0wPvRI/hqdefault.jpg","segments":[{"start":"2:38","end":"2:45","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331705886,"url":"https://music.youtube.com/watch?v=PPE93e6uQ4Y&list=RDAMVMn21OJYNKJNQ","videoId":"PPE93e6uQ4Y","title":"Fairytale, [reunion] (feat. GUMI)","channel":"buzzG - Topic","tuning":"","bpm":"","rating":3,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","V家 / 唱見 (Vocaloid & Utaite)"],"collectDate":"2026-10-18 21:54","note":"","thumbnail":"https://img.youtube.com/vi/PPE93e6uQ4Y/hqdefault.jpg","segments":[{"start":"2:35","end":"3:00","desc":"🎸 電吉他 Solo"}]},
+            {"id":1792331741899,"url":"https://music.youtube.com/watch?v=cwA3bXS44Wo&list=OLAK5uy_lz5f5XiETUb0-QY8HpCfOTZ8mLrcwrKio","videoId":"cwA3bXS44Wo","title":"Reason for being","channel":"YURiCa/Hanatan - Topic","tuning":"","bpm":"","rating":5,"genres":["硬式搖滾 / 重搖滾 (Hard Rock)","日系搖滾 / 流行搖滾 (J-Rock)","V家 / 唱見 (Vocaloid & Utaite)"],"collectDate":"2026-10-18 21:55","note":"","thumbnail":"https://img.youtube.com/vi/cwA3bXS44Wo/hqdefault.jpg","segments":[{"start":"2:11","end":"2:40","desc":"🎸 電吉他 Solo / 🥁 超爽節奏 / 雙踏爆發"}]},
+            {"id":1792331760400,"url":"https://music.youtube.com/watch?v=6aYYRacJYGc&list=RDAMPLOLAK5uy_neAdDcEmHI-n-adB0rHDA4xf2NxvNLC4Y","videoId":"6aYYRacJYGc","title":"CRAZY BEAUTIFUL NIGHT","channel":"MY FIRST STORY - Topic","tuning":"","bpm":"","rating":3,"genres":["日系搖滾 / 流行搖滾 (J-Rock)","硬式搖滾 / 重搖滾 (Hard Rock)"],"collectDate":"2026-10-18 21:55","note":"","thumbnail":"https://img.youtube.com/vi/6aYYRacJYGc/hqdefault.jpg","segments":[{"start":"2:29","end":"2:44","desc":"🎸 電吉他 Solo"}]}
+        ];
+
         let songs = [];
-        const defaultGenres = ['搖滾樂 (Rock)', '重金屬 (Heavy Metal)', 'J-Pop', 'J-Rock', 'Progressive Metal', '動漫流行 (Anime)', '電子音樂 (EDM)', '其他 (Other)'];
-        const defaultQuickTags = ['電吉他 Solo', 'Sweep Picking', 'Palm Muting', '吼腔', '高音飆高', '刷弦過門', '超爽節奏', '貝斯 Slap'];
-        
         let genres = [];
         let quickTags = [];
         
@@ -335,9 +446,11 @@
         let currentGenreFilter = 'ALL';
         let currentQuickTagFilter = 'ALL';
         let currentChannelFilter = 'ALL';
+        let currentRatingFilter = 'ALL'; // ALL, 5, 4_PLUS, 3
 
         let editingSongId = null;
         let activeSegmentRow = null;
+        let currentFormRating = 3; // 表單預設星級
 
         // --- YouTube 播放器狀態變數 ---
         let ytPlayer = null;
@@ -355,12 +468,31 @@
             }
             loadFromLocalStorage();
             updateCollectTime();
+            renderFormStars();
             renderGenres();
             renderQuickTags();
             resetSegmentRows();
             renderAllFilterControls();
             renderSongs();
         };
+
+        // --- ✨ 一鍵套用 v6.0 內建整理版資料 ---
+        function applyBuiltInV6Dataset(requireConfirm = false) {
+            if (requireConfirm && !confirm('確定要載入「v6.0 重構整理版歌單 (60首)」嗎？\n這將會用整理好的 9 大曲風、5 大直覺標籤與星級評分覆蓋目前的瀏覽器紀錄！')) {
+                return;
+            }
+            genres = [...defaultGenres];
+            quickTags = [...defaultQuickTags];
+            songs = JSON.parse(JSON.stringify(builtInV6Songs));
+            localStorage.setItem('youtube_music_v6_migrated', 'true');
+            saveToLocalStorage();
+            resetAllFilters();
+            renderGenres();
+            renderQuickTags();
+            renderAllFilterControls();
+            renderSongs();
+            showToast('已成功載入 v6.0 重構版 60 首歌單與新分類！', 'success');
+        }
 
         // --- Toast 通知系統 ---
         function showToast(message, type = 'success') {
@@ -400,12 +532,24 @@
                 .replace(/'/g, '&#039;');
         }
 
-        // --- LocalStorage 讀寫 ---
+        // --- LocalStorage 讀寫 (自動升級至 v6.0) ---
         function loadFromLocalStorage() {
+            const isV6Migrated = localStorage.getItem('youtube_music_v6_migrated');
+            if (!isV6Migrated) {
+                // 首次開啟 v6.0 時，自動幫你載入整理好的 60 首歌與新分類
+                genres = [...defaultGenres];
+                quickTags = [...defaultQuickTags];
+                songs = JSON.parse(JSON.stringify(builtInV6Songs));
+                localStorage.setItem('youtube_music_v6_migrated', 'true');
+                saveToLocalStorage();
+                return;
+            }
+
             try {
                 const savedSongs = localStorage.getItem('youtube_music_songs');
-                songs = savedSongs ? JSON.parse(savedSongs) : [];
-            } catch (e) { songs = []; }
+                songs = savedSongs ? JSON.parse(savedSongs) : JSON.parse(JSON.stringify(builtInV6Songs));
+                songs.forEach(s => { if (typeof s.rating !== 'number') s.rating = 3; });
+            } catch (e) { songs = JSON.parse(JSON.stringify(builtInV6Songs)); }
 
             try {
                 const savedGenres = localStorage.getItem('youtube_music_genres');
@@ -422,6 +566,44 @@
             localStorage.setItem('youtube_music_songs', JSON.stringify(songs));
             localStorage.setItem('youtube_music_genres', JSON.stringify(genres));
             localStorage.setItem('youtube_music_quick_tags', JSON.stringify(quickTags));
+        }
+
+        // --- ✨ 星級評分控制 (表單與卡片即時點選) ---
+        const ratingTextMap = {
+            1: '1星 普通',
+            2: '2星 尚可',
+            3: '3星 收藏',
+            4: '🔥 4星 超愛必聽',
+            5: '👑 5星 殿堂最愛'
+        };
+
+        function setFormRating(star) {
+            currentFormRating = star;
+            renderFormStars();
+        }
+
+        function renderFormStars() {
+            const container = document.getElementById('formStarContainer');
+            const label = document.getElementById('formRatingLabel');
+            if (!container) return;
+
+            container.innerHTML = [1, 2, 3, 4, 5].map(star => `
+                <button type="button" onclick="setFormRating(${star})" class="text-base transition-transform hover:scale-125 focus:outline-none ${star <= currentFormRating ? 'text-amber-400' : 'text-gray-600'}">
+                    <i class="fa-solid fa-star"></i>
+                </button>
+            `).join('');
+
+            if (label) label.innerText = ratingTextMap[currentFormRating] || `${currentFormRating}星`;
+        }
+
+        function quickUpdateSongRating(songId, newRating) {
+            const song = songs.find(s => s.id === songId);
+            if (!song) return;
+            song.rating = newRating;
+            saveToLocalStorage();
+            renderAllFilterControls();
+            renderSongs();
+            showToast(`「${song.title}」已評為 ${ratingTextMap[newRating]}`, 'info');
         }
 
         // --- 智慧型時間區間解析 ---
@@ -516,7 +698,7 @@
                 const parsedUrl = new URL(url);
                 if (parsedUrl.hostname.includes('youtube.com') || parsedUrl.hostname.includes('music.youtube.com')) {
                     const vParam = parsedUrl.searchParams.get('v');
-                    if (vParam) return vParam;
+                    if (vParam) return vParam.slice(0, 11);
                 }
             } catch (e) {}
             const regExp = /(?:youtu\.be\/|youtube\.com\/(?:watch\?.*v=|embed\/|v\/|shorts\/)|music\.youtube\.com\/watch\?.*v=)([a-zA-Z0-9_-]{11})/;
@@ -1116,7 +1298,7 @@
                 segments.push({
                     start: parsed.start,
                     end: parsed.end,
-                    desc: desc || '無特定備註'
+                    desc: desc || '🎸 電吉他 Solo'
                 });
             });
 
@@ -1134,6 +1316,7 @@
                         videoId,
                         title,
                         channel,
+                        rating: currentFormRating,
                         genres: selectedGenres,
                         note,
                         thumbnail,
@@ -1149,6 +1332,9 @@
                     videoId,
                     title,
                     channel,
+                    tuning: "",
+                    bpm: "",
+                    rating: currentFormRating,
                     genres: selectedGenres,
                     collectDate,
                     note,
@@ -1175,6 +1361,7 @@
             document.getElementById('channelInput').value = song.channel || '';
             document.getElementById('collectDateInput').value = song.collectDate || '';
             document.getElementById('noteInput').value = song.note || '';
+            setFormRating(song.rating || 3);
 
             document.querySelectorAll('input[name="songGenres"]').forEach(cb => {
                 cb.checked = Array.isArray(song.genres) && song.genres.includes(cb.value);
@@ -1215,17 +1402,53 @@
             document.getElementById('titleInput').value = '';
             document.getElementById('channelInput').value = '';
             document.getElementById('noteInput').value = '';
+            setFormRating(3);
             document.querySelectorAll('input[name="songGenres"]').forEach(cb => cb.checked = false);
             updateCollectTime();
             resetSegmentRows();
         }
 
-        // --- 🔥 多維度篩選控制 (曲風 + 精華標籤 + 頻道) ---
+        // --- 🔥 多維度篩選控制 (星級 + 曲風 + 精華標籤 + 頻道) ---
         function renderAllFilterControls() {
+            renderRatingFilterButtons();
             renderGenreFilterTags();
             renderQuickTagFilterButtons();
             renderChannelFilterDropdown();
             updateResetFilterButtonVisibility();
+        }
+
+        // 0. 星級篩選按鈕渲染
+        function renderRatingFilterButtons() {
+            const container = document.getElementById('filterRatingContainer');
+            if (!container) return;
+
+            const count5 = songs.filter(s => (s.rating || 3) === 5).length;
+            const count4Plus = songs.filter(s => (s.rating || 3) >= 4).length;
+            const count4 = songs.filter(s => (s.rating || 3) === 4).length;
+            const count3 = songs.filter(s => (s.rating || 3) <= 3).length;
+
+            const options = [
+                { key: 'ALL', label: `全部星級 (${songs.length})` },
+                { key: '5', label: `👑 5星 殿堂最愛 (${count5})` },
+                { key: '4_PLUS', label: `🔥 4星以上 必聽精選 (${count4Plus})` },
+                { key: '4', label: `⭐ 4星 超愛 (${count4})` },
+                { key: '3', label: `🎵 3星 一般收藏 (${count3})` }
+            ];
+
+            container.innerHTML = options.map(opt => {
+                const isActive = currentRatingFilter === opt.key;
+                return `
+                    <button onclick="setRatingFilter('${opt.key}')" class="text-xs px-3 py-1.5 rounded-lg border transition ${isActive ? 'bg-amber-500 border-amber-300 text-gray-950 font-bold shadow-sm' : 'bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-700'}">
+                        ${opt.label}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function setRatingFilter(ratingKey) {
+            currentRatingFilter = (currentRatingFilter === ratingKey && ratingKey !== 'ALL') ? 'ALL' : ratingKey;
+            renderAllFilterControls();
+            renderSongs();
         }
 
         // 1. 曲風篩選按鈕渲染
@@ -1238,10 +1461,14 @@
                 <button onclick="setGenreFilter('ALL')" class="text-xs px-3 py-1.5 rounded-lg border transition ${currentGenreFilter === 'ALL' ? 'bg-purple-600 border-purple-400 text-white font-bold shadow-sm' : 'bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-700'}">
                     全部曲風 (${songs.length})
                 </button>
-                <button onclick="setGenreFilter('UNCHECKED')" class="text-xs px-3 py-1.5 rounded-lg border transition ${currentGenreFilter === 'UNCHECKED' ? 'bg-purple-600 border-purple-400 text-white font-bold shadow-sm' : 'bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-700'}">
-                    未分類 (${uncheckedCount})
-                </button>
             `;
+            if (uncheckedCount > 0) {
+                html += `
+                    <button onclick="setGenreFilter('UNCHECKED')" class="text-xs px-3 py-1.5 rounded-lg border transition ${currentGenreFilter === 'UNCHECKED' ? 'bg-purple-600 border-purple-400 text-white font-bold shadow-sm' : 'bg-gray-900 border-gray-700 text-gray-300 hover:bg-gray-700'}">
+                        未分類 (${uncheckedCount})
+                    </button>
+                `;
+            }
 
             html += genres.map((g, idx) => {
                 const count = songs.filter(s => s.genres && s.genres.includes(g)).length;
@@ -1256,7 +1483,7 @@
             container.innerHTML = html;
         }
 
-        // 2. 精華片段標籤 (如：電吉他 Solo、吼腔) 篩選按鈕渲染
+        // 2. 精華片段標籤篩選按鈕渲染
         function renderQuickTagFilterButtons() {
             const container = document.getElementById('filterQuickTagsContainer');
             if (!container) return;
@@ -1280,7 +1507,6 @@
             container.innerHTML = html;
         }
 
-        // 判斷某首歌的任一片段或備註是否包含指定標籤
         function songHasQuickTag(song, tag) {
             if (!song || !tag) return false;
             const target = tag.toLowerCase();
@@ -1306,7 +1532,6 @@
 
             const sortedChannels = Object.keys(channelCounts).sort((a, b) => a.localeCompare(b, 'zh-Hant'));
 
-            // 若目前選中的頻道已被刪光，自動切回 ALL
             if (currentChannelFilter !== 'ALL' && currentChannelFilter !== 'UNKNOWN' && !channelCounts[currentChannelFilter]) {
                 currentChannelFilter = 'ALL';
             }
@@ -1332,7 +1557,8 @@
         }
 
         function setGenreFilterByIndex(idx) {
-            currentGenreFilter = genres[idx] || 'ALL';
+            const selected = genres[idx] || 'ALL';
+            currentGenreFilter = (currentGenreFilter === selected) ? 'ALL' : selected;
             renderAllFilterControls();
             renderSongs();
         }
@@ -1345,7 +1571,6 @@
 
         function setQuickTagFilterByIndex(idx) {
             const selected = quickTags[idx] || 'ALL';
-            // 再點一次相同標籤可取消篩選
             currentQuickTagFilter = (currentQuickTagFilter === selected) ? 'ALL' : selected;
             renderAllFilterControls();
             renderSongs();
@@ -1361,16 +1586,16 @@
             currentGenreFilter = 'ALL';
             currentQuickTagFilter = 'ALL';
             currentChannelFilter = 'ALL';
+            currentRatingFilter = 'ALL';
             document.getElementById('searchInput').value = '';
             renderAllFilterControls();
             renderSongs();
-            showToast('已清除所有篩選條件！', 'info');
         }
 
         function updateResetFilterButtonVisibility() {
             const btn = document.getElementById('resetAllFiltersBtn');
             if (!btn) return;
-            const hasActiveFilter = currentGenreFilter !== 'ALL' || currentQuickTagFilter !== 'ALL' || currentChannelFilter !== 'ALL' || (document.getElementById('searchInput')?.value.trim() !== '');
+            const hasActiveFilter = currentRatingFilter !== 'ALL' || currentGenreFilter !== 'ALL' || currentQuickTagFilter !== 'ALL' || currentChannelFilter !== 'ALL' || (document.getElementById('searchInput')?.value.trim() !== '');
             btn.classList.toggle('hidden', !hasActiveFilter);
         }
 
@@ -1380,7 +1605,6 @@
             renderSongs();
         }
 
-        // 點擊卡片上的頻道名稱可直接篩選該頻道
         function filterByChannelClick(channelName) {
             if (!channelName) return;
             currentChannelFilter = channelName;
@@ -1401,6 +1625,17 @@
 
             let filteredSongs = [...songs];
 
+            // 0. 星級篩選
+            if (currentRatingFilter === '5') {
+                filteredSongs = filteredSongs.filter(s => (s.rating || 3) === 5);
+            } else if (currentRatingFilter === '4_PLUS') {
+                filteredSongs = filteredSongs.filter(s => (s.rating || 3) >= 4);
+            } else if (currentRatingFilter === '4') {
+                filteredSongs = filteredSongs.filter(s => (s.rating || 3) === 4);
+            } else if (currentRatingFilter === '3') {
+                filteredSongs = filteredSongs.filter(s => (s.rating || 3) <= 3);
+            }
+
             // 1. 曲風篩選
             if (currentGenreFilter === 'UNCHECKED') {
                 filteredSongs = filteredSongs.filter(s => !s.genres || s.genres.length === 0);
@@ -1408,7 +1643,7 @@
                 filteredSongs = filteredSongs.filter(s => s.genres && s.genres.includes(currentGenreFilter));
             }
 
-            // 2. 精華片段標籤篩選 (如：電吉他 Solo、吼腔)
+            // 2. 精華片段標籤篩選
             if (currentQuickTagFilter !== 'ALL') {
                 filteredSongs = filteredSongs.filter(s => songHasQuickTag(s, currentQuickTagFilter));
             }
@@ -1438,6 +1673,7 @@
             const sortBy = document.getElementById('sortSelect')?.value || 'newest';
             filteredSongs.sort((a, b) => {
                 if (sortBy === 'newest') return (b.id || 0) - (a.id || 0);
+                if (sortBy === 'rating_desc') return ((b.rating || 3) - (a.rating || 3)) || ((b.id || 0) - (a.id || 0));
                 if (sortBy === 'oldest') return (a.id || 0) - (b.id || 0);
                 if (sortBy === 'title') return String(a.title).localeCompare(String(b.title), 'zh-Hant');
                 if (sortBy === 'segments') return (b.segments?.length || 0) - (a.segments?.length || 0);
@@ -1458,6 +1694,18 @@
             listEl.innerHTML = '';
             filteredSongs.forEach(song => {
                 const videoId = song.videoId || extractVideoId(song.url);
+                const songRating = song.rating || 3;
+
+                // 渲染卡片上的互動式星星
+                const starsHtml = [1, 2, 3, 4, 5].map(star => `
+                    <button type="button" onclick="quickUpdateSongRating(${song.id}, ${star})" class="text-sm transition-transform hover:scale-125 focus:outline-none ${star <= songRating ? 'text-amber-400' : 'text-gray-600'}" title="點擊評為 ${star} 星">
+                        <i class="fa-solid fa-star"></i>
+                    </button>
+                `).join('');
+
+                const ratingBadge = songRating === 5
+                    ? `<span class="bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[11px] font-bold px-2 py-0.5 rounded-full">👑 殿堂神曲</span>`
+                    : (songRating === 4 ? `<span class="bg-rose-500/20 border border-rose-400/50 text-rose-300 text-[11px] font-bold px-2 py-0.5 rounded-full">🔥 必聽精選</span>` : '');
 
                 const genresHtml = (song.genres && song.genres.length > 0) 
                     ? song.genres.map(g => `<span class="bg-purple-900/80 border border-purple-700/60 text-purple-200 text-xs px-2 py-0.5 rounded-full">${escapeHtml(g)}</span>`).join('')
@@ -1466,7 +1714,6 @@
                 const segmentsHtml = (song.segments || []).map((seg, sIdx) => {
                     const startSec = timeToSeconds(seg.start);
                     const directLink = videoId ? `https://www.youtube.com/watch?v=${videoId}&t=${startSec}s` : song.url;
-                    // 若目前正在篩選特定精華標籤，且該片段符合，給予高亮邊框提示
                     const isMatchedTag = currentQuickTagFilter !== 'ALL' && String(seg.desc || '').toLowerCase().includes(currentQuickTagFilter.toLowerCase());
                     const rowBorderClass = isMatchedTag
                         ? 'border-pink-500 bg-pink-950/30 ring-1 ring-pink-500/40'
@@ -1509,8 +1756,12 @@
                     </div>
                     <div class="flex-1 w-full">
                         <div class="flex justify-between items-start gap-2">
-                            <div class="space-y-1">
+                            <div class="space-y-1.5">
                                 <div class="flex flex-wrap gap-1.5 items-center">
+                                    <div class="flex items-center gap-0.5 bg-gray-900/90 px-2 py-0.5 rounded-full border border-gray-700 mr-1">
+                                        ${starsHtml}
+                                    </div>
+                                    ${ratingBadge}
                                     ${genresHtml}
                                 </div>
                                 <h3 class="font-bold text-lg text-white">
@@ -1579,7 +1830,7 @@
                 return;
             }
             const backupPayload = {
-                version: '5.3',
+                version: '6.0',
                 exportedAt: new Date().toISOString(),
                 genres,
                 quickTags,
@@ -1592,7 +1843,7 @@
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
-            showToast('已匯出 JSON 備份檔案！', 'success');
+            showToast('已匯出 v6.0 JSON 備份檔案！', 'success');
         }
 
         function importData(event) {
@@ -1609,33 +1860,39 @@
                         importedSongs = parsed;
                     } else if (parsed && Array.isArray(parsed.songs)) {
                         importedSongs = parsed.songs;
-                        if (Array.isArray(parsed.genres)) {
-                            genres = Array.from(new Set([...genres, ...parsed.genres]));
-                        }
-                        if (Array.isArray(parsed.quickTags)) {
-                            quickTags = Array.from(new Set([...quickTags, ...parsed.quickTags]));
-                        }
                     } else {
                         throw new Error('不支援的 JSON 格式');
                     }
 
-                    const existingIds = new Set(songs.map(s => s.id));
-                    let addedCount = 0;
-                    importedSongs.forEach(item => {
-                        if (!item.id) item.id = Date.now() + Math.floor(Math.random() * 10000);
-                        if (!existingIds.has(item.id)) {
-                            songs.push(item);
-                            existingIds.add(item.id);
-                            addedCount++;
-                        }
-                    });
+                    const replaceAll = confirm('請問要「完全覆蓋現有歌單與標籤（選確定）」還是「合併新增不重複歌曲（選取消）」？');
+
+                    if (replaceAll) {
+                        songs = importedSongs.map(s => ({ ...s, rating: typeof s.rating === 'number' ? s.rating : 3 }));
+                        if (Array.isArray(parsed.genres) && parsed.genres.length > 0) genres = [...parsed.genres];
+                        if (Array.isArray(parsed.quickTags) && parsed.quickTags.length > 0) quickTags = [...parsed.quickTags];
+                        showToast(`已完全覆蓋並載入 ${songs.length} 首音樂紀錄！`, 'success');
+                    } else {
+                        if (Array.isArray(parsed.genres)) genres = Array.from(new Set([...genres, ...parsed.genres]));
+                        if (Array.isArray(parsed.quickTags)) quickTags = Array.from(new Set([...quickTags, ...parsed.quickTags]));
+                        const existingIds = new Set(songs.map(s => s.id));
+                        let addedCount = 0;
+                        importedSongs.forEach(item => {
+                            if (!item.id) item.id = Date.now() + Math.floor(Math.random() * 10000);
+                            if (typeof item.rating !== 'number') item.rating = 3;
+                            if (!existingIds.has(item.id)) {
+                                songs.push(item);
+                                existingIds.add(item.id);
+                                addedCount++;
+                            }
+                        });
+                        showToast(`成功合併匯入 ${addedCount} 首新音樂紀錄！`, 'success');
+                    }
 
                     saveToLocalStorage();
                     renderGenres();
                     renderQuickTags();
                     renderAllFilterControls();
                     renderSongs();
-                    showToast(`成功匯入 ${addedCount} 首新音樂紀錄！`, 'success');
                 } catch (err) {
                     console.error(err);
                     showToast('讀取 JSON 檔案失敗，請確認檔案格式正確！', 'error');
